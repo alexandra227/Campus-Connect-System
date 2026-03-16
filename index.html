@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CampusConnect</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+  <!-- ── TOAST ── -->
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="appToast" class="toast align-items-center text-white border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body d-flex align-items-center gap-2">
+          <i class="bi bi-check-circle-fill"></i>
+          <span id="toast-msg">Success!</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LOGIN PAGE ── -->
+  <div id="loginPage" class="main-card">
+    <div class="row g-0">
+
+      <!-- LEFT: FORMS (Login/Sign Up) -->
+      <div class="col-12 col-md-6 panel-left">
+
+        <!-- Logo -->
+        <div class="d-flex align-items-center gap-2 mb-4">
+          <div class="logo-circle">C</div>
+          <span class="fw-semibold text-dark" style="font-size:14px;">CampusConnect</span>
+        </div>
+
+        <!-- ── LOGIN FORM ── -->
+        <div id="loginForm">
+          <h5 class="fw-semibold text-dark mb-1" style="font-size:17px;">Welcome Back</h5>
+          <p class="text-muted mb-4" style="font-size:12px;">Log in to your account</p>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <div class="input-icon-wrap">
+              <i class="bi bi-envelope input-icon"></i>
+              <input type="email" id="login-email" class="form-control" placeholder="Email Address" autocomplete="email"/>
+            </div>
+            <div class="invalid-feedback d-block" id="login-email-error" style="display:none!important;"></div>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <div class="input-icon-wrap">
+              <i class="bi bi-lock input-icon"></i>
+              <input type="password" id="login-password" class="form-control" placeholder="Password" style="padding-right:36px;" autocomplete="current-password"/>
+              <button class="eye-toggle" onclick="togglePass('login-password','login-eye')">
+                <i class="bi bi-eye" id="login-eye" style="font-size:14px;"></i>
+              </button>
+            </div>
+            <div class="invalid-feedback d-block" id="login-pass-error" style="display:none!important;"></div>
+          </div>
+
+          <!-- Role -->
+          <div class="mb-3">
+            <label class="form-label text-muted" style="font-size:12px; font-weight:500;">Role</label>
+            <select id="login-role" class="form-control">
+              <option value="student">Student</option>
+              <option value="officer">Org Officer</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          <!-- Forgot -->
+          <div class="text-end mb-4">
+            <a href="#" class="link-crimson" style="font-size:12px;">Forgot password?</a>
+          </div>
+
+          <!-- Login Button -->
+          <button class="btn-signup d-flex align-items-center justify-content-center gap-2 mb-3"
+                  id="loginBtn" onclick="handleLogin()">
+            <span class="spinner-border spinner-border-sm btn-spinner" id="login-spinner"></span>
+            <span id="login-btn-text">Log In</span>
+          </button>
+
+          <!-- Switch to Sign Up -->
+          <p class="text-center text-muted mb-0" style="font-size:12px;">
+            Don't have an account?
+            <span class="link-crimson" onclick="switchToSignUp()">Sign Up</span>
+          </p>
+        </div>
+
+        <!-- ── SIGN UP FORM ── -->
+        <div id="signupForm" style="display:none;">
+          <h5 class="fw-semibold text-dark mb-1" style="font-size:17px;">Create your Account</h5>
+          <p class="text-muted mb-4" style="font-size:12px;">Join the campus community today</p>
+
+          <!-- Full Name -->
+          <div class="mb-3">
+            <div class="input-icon-wrap">
+              <i class="bi bi-person input-icon"></i>
+              <input type="text" id="reg-name" class="form-control" placeholder="Full Name" autocomplete="name"/>
+            </div>
+            <div class="invalid-feedback d-block" id="reg-name-error" style="display:none!important;"></div>
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <div class="input-icon-wrap">
+              <i class="bi bi-envelope input-icon"></i>
+              <input type="email" id="reg-email" class="form-control" placeholder="Email Address" autocomplete="email"/>
+            </div>
+            <div class="invalid-feedback d-block" id="reg-email-error" style="display:none!important;"></div>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-4">
+            <div class="input-icon-wrap">
+              <i class="bi bi-lock input-icon"></i>
+              <input type="password" id="reg-password" class="form-control" placeholder="Password"
+                     style="padding-right:36px;" autocomplete="new-password"/>
+              <button class="eye-toggle" onclick="togglePass('reg-password','reg-eye')">
+                <i class="bi bi-eye" id="reg-eye" style="font-size:14px;"></i>
+              </button>
+            </div>
+            <div class="invalid-feedback d-block" id="reg-pass-error" style="display:none!important;"></div>
+          </div>
+
+          <!-- Sign Up Button -->
+          <button class="btn-signup d-flex align-items-center justify-content-center gap-2 mb-3"
+                  id="signupBtn" onclick="handleSignUp()">
+            <span class="spinner-border spinner-border-sm btn-spinner" id="signup-spinner"></span>
+            <span id="signup-btn-text">Sign Up</span>
+          </button>
+
+          <!-- Switch to Login -->
+          <p class="text-center text-muted mb-0" style="font-size:12px;">
+            Already have an account?
+            <span class="link-crimson" onclick="switchToLogin()">Log In</span>
+          </p>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: WELCOME MESSAGE -->
+      <div class="col-12 col-md-6 panel-right">
+        <div id="welcomeLogin">
+          <h2 class="fw-bold text-white mb-3" style="font-size:32px;">Welcome Back!</h2>
+          <p class="text-white mb-4" style="font-size:13px; opacity:0.65; line-height:1.7; max-width:260px;">
+            New to CampusConnect? Click Sign Up in the form to create an account and join the campus community.
+          </p>
+        </div>
+
+        <div id="welcomeSignup" style="display:none;">
+          <h2 class="fw-bold text-white mb-3" style="font-size:32px;">Join Us!</h2>
+          <p class="text-white mb-4" style="font-size:13px; opacity:0.65; line-height:1.7; max-width:260px;">
+            Already have an account? Click Log In to access your account and continue exploring campus events.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── STUDENT HOMEPAGE ── -->
+  <div id="studentPage" style="display:none; background:#f5f5f5; height:100vh; width:100%; position:fixed; top:0; left:0; overflow-y:scroll;">
+    <!-- Header -->
+    <nav class="navbar navbar-light bg-white shadow-sm">
+      <div class="container-fluid">
+        <div class="d-flex align-items-center gap-2">
+          <div class="logo-circle" style="width:40px; height:40px; font-size:12px;">C</div>
+          <span class="fw-semibold" style="font-size:14px;">CampusConnect</span>
+        </div>
+        <!-- Search Bar -->
+        <div style="flex:1; max-width:400px; margin:0 20px;">
+          <div style="position:relative;">
+            <i class="bi bi-search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#aaa;"></i>
+            <input type="text" class="form-control" placeholder="Search events..." style="padding-left:36px; border-color:#e5e7eb; height:36px; font-size:13px;"/>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <!-- Notifications Dropdown -->
+          <div class="dropdown">
+            <button class="btn btn-link position-relative" id="notificationBtn" data-bs-toggle="dropdown" style="color:#C0272D; text-decoration:none; border:none;">
+              <i class="bi bi-bell" style="font-size:18px;"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background:#C0272D; font-size:10px;">3</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" style="width:380px; max-height:400px; overflow-y:auto;">
+              <li class="dropdown-header" style="background:#f5f5f5; border-bottom:1px solid #e5e7eb; padding:12px;">
+                <strong>Notifications</strong>
+              </li>
+              
+              <li><a class="dropdown-item" href="#" style="border-bottom:1px solid #e5e7eb; padding:12px;">
+                <div class="d-flex gap-2">
+                  <div style="width:8px; height:8px; background:#C0272D; border-radius:50%; margin-top:5px; flex-shrink:0;"></div>
+                  <div style="font-size:13px;">
+                    <div class="fw-semibold">Event Reminder: Campus Tech Summit</div>
+                    <div class="text-muted" style="font-size:11px;">Your registered event is starting tomorrow at 10:00 AM</div>
+                    <small class="text-muted">2 hours ago</small>
+                  </div>
+                </div>
+              </a></li>
+
+              <li><a class="dropdown-item" href="#" style="border-bottom:1px solid #e5e7eb; padding:12px;">
+                <div class="d-flex gap-2">
+                  <div style="width:8px; height:8px; background:#C0272D; border-radius:50%; margin-top:5px; flex-shrink:0;"></div>
+                  <div style="font-size:13px;">
+                    <div class="fw-semibold">New Event Posted: Cultural Night</div>
+                    <div class="text-muted" style="font-size:11px;">A new event in your interest category is available to register</div>
+                    <small class="text-muted">1 day ago</small>
+                  </div>
+                </div>
+              </a></li>
+
+              <li><a class="dropdown-item" href="#" style="padding:12px;">
+                <div class="d-flex gap-2">
+                  <div style="width:8px; height:8px; background:#C0272D; border-radius:50%; margin-top:5px; flex-shrink:0;"></div>
+                  <div style="font-size:13px;">
+                    <div class="fw-semibold">Registration Confirmed: Sports Day</div>
+                    <div class="text-muted" style="font-size:11px;">You have successfully registered for Sports Day on April 5</div>
+                    <small class="text-muted">3 days ago</small>
+                  </div>
+                </div>
+              </a></li>
+            </ul>
+          </div>
+
+          <span class="text-muted" id="studentName" style="font-size:13px;"></span>
+          <!-- Profile Dropdown -->
+          <div class="dropdown">
+            <button class="btn btn-link" data-bs-toggle="dropdown" style="color:#333; text-decoration:none; border:none; padding:0;">
+              <div style="width:36px; height:36px; border-radius:50%; background:#C0272D; color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px;">
+                <i class="bi bi-person-fill"></i>
+              </div>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" style="width:200px;">
+              <li><a class="dropdown-item" href="#" style="padding:12px;">
+                <i class="bi bi-person-circle me-2"></i>Profile
+              </a></li>
+              <li><a class="dropdown-item" href="#" style="padding:12px;">
+                <i class="bi bi-gear me-2"></i>Settings
+              </a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" onclick="logout(); return false;" style="padding:12px; color:#C0272D;">
+                <i class="bi bi-box-arrow-right me-2"></i>Logout
+              </a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <p>THURSDAY, MARCH 13, 2026</p>
+        <h2>Good morning, <span id="welcomeName">Alex</span>!</h2>
+        <p class="welcome-banner-text">You have 3 upcoming events this week. Stay connected with what's happening on campus.</p>
+        <button class="btn btn-light">
+          <i class="bi bi-calendar-event me-2"></i>Browse Events
+        </button>
+      </div>
+
+      <div class="row">
+        <!-- Main Content -->
+        <div class="col-12 col-lg-8">
+          <div style="margin-bottom:30px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+              <h5 style="font-weight:700; margin:0;">Upcoming Events</h5>
+              <a href="#" style="color:#C0272D; text-decoration:none; font-size:13px;">View all</a>
+            </div>
+
+            <div class="row g-3">
+              <!-- Event 1 -->
+              <div class="col-12 col-md-4">
+                <div class="card event-card shadow-sm">
+                  <div class="event-card-header" style="background:#E8F4F8; color:#4A90E2;">
+                    <i class="bi bi-mortarboard"></i>
+                  </div>
+                  <div class="card-body event-card-body">
+                    <span class="badge event-badge" style="background:#E8F4F8; color:#4A90E2;">Academic</span>
+                    <h6 class="event-title">Research Summit 2025</h6>
+                    <p class="event-meta"><i class="bi bi-calendar me-1"></i>Mar 18, 2026</p>
+                    <p class="event-meta"><i class="bi bi-geo-alt me-1"></i>CCS Auditorium</p>
+                    <p class="event-attendees">120 attending</p>
+                    <button class="btn btn-sm btn-crimson w-100" onclick="viewEventDetails({
+                      title: 'Research Summit 2025',
+                      category: 'Academic',
+                      date: 'Mar 18, 2026',
+                      time: '9:00 AM',
+                      location: 'CCS Auditorium',
+                      attendees: '120',
+                      description: 'Join us for an exciting research summit where students and faculty present their latest research projects. Network with peers and learn about innovative academic initiatives on campus.',
+                      details: ['Duration: 3 hours', 'Free for all students', 'Refreshments provided', 'Q&A session included']
+                    })">View Details</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Event 2 -->
+              <div class="col-12 col-md-4">
+                <div class="card event-card shadow-sm">
+                  <div class="event-card-header" style="background:#F0E8F8; color:#9C5FCC;">
+                    <i class="bi bi-music-note"></i>
+                  </div>
+                  <div class="card-body event-card-body">
+                    <span class="badge event-badge" style="background:#F0E8F8; color:#9C5FCC;">Social</span>
+                    <h6 class="event-title">Campus Music Fest</h6>
+                    <p class="event-meta"><i class="bi bi-calendar me-1"></i>Mar 20, 2026</p>
+                    <p class="event-meta"><i class="bi bi-geo-alt me-1"></i>Open Court</p>
+                    <p class="event-attendees">340 attending</p>
+                    <button class="btn btn-sm btn-crimson w-100" onclick="viewEventDetails({
+                      title: 'Campus Music Fest',
+                      category: 'Social',
+                      date: 'Mar 20, 2026',
+                      time: '4:00 PM',
+                      location: 'Open Court',
+                      attendees: '340',
+                      description: 'Experience the vibrant campus music scene! Featuring local and student bands performing their best hits. A great opportunity to unwind and enjoy live music with the campus community.',
+                      details: ['Live performances', 'Food and drinks available', 'Free entry', 'Bring your friends']
+                    })">View Details</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Event 3 -->
+              <div class="col-12 col-md-4">
+                <div class="card event-card shadow-sm">
+                  <div class="event-card-header" style="background:#FEE8E8; color:#FF6B35;">
+                    <i class="bi bi-basketball"></i>
+                  </div>
+                  <div class="card-body event-card-body">
+                    <span class="badge event-badge" style="background:#FEE8E8; color:#FF6B35;">Sports</span>
+                    <h6 class="event-title">Intramurals Opening</h6>
+                    <p class="event-meta"><i class="bi bi-calendar me-1"></i>Mar 22, 2026</p>
+                    <p class="event-meta"><i class="bi bi-geo-alt me-1"></i>Main Gymnasium</p>
+                    <p class="event-attendees">250 attending</p>
+                    <button class="btn btn-sm btn-crimson w-100" onclick="viewEventDetails({
+                      title: 'Intramurals Opening',
+                      category: 'Sports',
+                      date: 'Mar 22, 2026',
+                      time: '8:00 AM',
+                      location: 'Main Gymnasium',
+                      attendees: '250',
+                      description: 'Kick off the intramurals season with exciting sports events! Compete in your favorite sports and represent your department. Open to all students regardless of skill level.',
+                      details: ['Multiple sports available', 'Team registration', 'Schedule TBA', 'Trophies and prizes']
+                    })">View Details</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Event 4 -->
+              <div class="col-12 col-md-4">
+                <div class="card event-card shadow-sm">
+                  <div class="event-card-header" style="background:#F0E8F8; color:#9C5FCC;">
+                    <i class="bi bi-code-square"></i>
+                  </div>
+                  <div class="card-body event-card-body">
+                    <span class="badge event-badge" style="background:#F0E8F8; color:#9C5FCC;">Social</span>
+                    <h6 class="event-title">Hackathon 2025</h6>
+                    <p class="event-meta"><i class="bi bi-calendar me-1"></i>Mar 25, 2026</p>
+                    <p class="event-meta"><i class="bi bi-geo-alt me-1"></i>CCS Lab 3</p>
+                    <p class="event-attendees">88 attending</p>
+                    <button class="btn btn-sm btn-crimson w-100" onclick="viewEventDetails({
+                      title: 'Hackathon 2025',
+                      category: 'Social',
+                      date: 'Mar 25, 2026',
+                      time: '10:00 AM',
+                      location: 'CCS Lab 3',
+                      attendees: '88',
+                      description: 'Build innovative solutions in 24 hours! Collaborate with fellow students to create projects from scratch. Prizes, mentorship, and networking opportunities await.',
+                      details: ['24-hour event', 'Team or individual', 'Free meals provided', 'API access available'],
+                      registered: true
+                    })"> View Details</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Event 5 -->
+              <div class="col-12 col-md-4">
+                <div class="card event-card shadow-sm">
+                  <div class="event-card-header" style="background:#FEE8E8; color:#FF6B35;">
+                    <i class="bi bi-palette"></i>
+                  </div>
+                  <div class="card-body event-card-body">
+                    <span class="badge event-badge" style="background:#FEE8E8; color:#FF6B35;">Social</span>
+                    <h6 class="event-title">Art & Culture Week</h6>
+                    <p class="event-meta"><i class="bi bi-calendar me-1"></i>Mar 28, 2026</p>
+                    <p class="event-meta"><i class="bi bi-geo-alt me-1"></i>Arts Building</p>
+                    <p class="event-attendees">175 attending</p>
+                    <button class="btn btn-sm btn-crimson w-100" onclick="viewEventDetails({
+                      title: 'Art & Culture Week',
+                      category: 'Social',
+                      date: 'Mar 28, 2026',
+                      time: '9:00 AM - 5:00 PM',
+                      location: 'Arts Building',
+                      attendees: '175',
+                      description: 'Celebrate diversity through art, music, dance, and cultural performances. Showcase student talents and explore different cultures from around the world.',
+                      details: ['Art exhibitions', 'Live performances', 'Cultural food fest', 'Talent showcase']
+                    })">View Details</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Event 6 -->
+              <div class="col-12 col-md-4">
+                <div class="card event-card shadow-sm">
+                  <div class="event-card-header" style="background:#E8F4F8; color:#4A90E2;">
+                    <i class="bi bi-briefcase"></i>
+                  </div>
+                  <div class="card-body event-card-body">
+                    <span class="badge event-badge" style="background:#E8F4F8; color:#4A90E2;">Academic</span>
+                    <h6 class="event-title">Scholarship Fair</h6>
+                    <p class="event-meta"><i class="bi bi-calendar me-1"></i>Apr 2, 2026</p>
+                    <p class="event-meta"><i class="bi bi-geo-alt me-1"></i>Main Lobby</p>
+                    <p class="event-attendees">60 attending</p>
+                    <button class="btn btn-sm btn-crimson w-100" onclick="viewEventDetails({
+                      title: 'Scholarship Fair',
+                      category: 'Academic',
+                      date: 'Apr 2, 2026',
+                      time: '10:00 AM - 2:00 PM',
+                      location: 'Main Lobby',
+                      attendees: '60',
+                      description: 'Connect with scholarship providers and financial aid representatives. Learn about available funding opportunities and financial assistance programs for your education.',
+                      details: ['Multiple scholarship opportunities', 'Financial aid advice', 'One-on-one consultations', 'Application assistance']
+                    })">View Details</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Campus Organizations Section -->
+          <div style="background:#f5f5f5; padding:30px 20px; margin:0 -20px; border-top:1px solid #e5e7eb;">
+            <div style="margin:0 0 20px 0;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h5 style="font-weight:700; margin:0;">Campus Organizations</h5>
+                <a href="#" style="color:#C0272D; text-decoration:none; font-size:13px;">View all</a>
+              </div>
+            </div>
+
+            <div class="row g-4">
+              <!-- Org 1 -->
+              <div class="col-2">
+                <div class="card org-card shadow-sm text-center">
+                  <div class="org-icon" style="color:#4A90E2;">
+                    <i class="bi bi-folder"></i>
+                  </div>
+                  <p class="org-name">CSS Society</p>
+                  <p class="org-members">320 members</p>
+                </div>
+              </div>
+
+              <!-- Org 2 -->
+              <div class="col-2">
+                <div class="card org-card shadow-sm text-center">
+                  <div class="org-icon" style="color:#FF9500;">
+                    <i class="bi bi-theater-masks"></i>
+                  </div>
+                  <p class="org-name">Drama Guild</p>
+                  <p class="org-members">140 members</p>
+                </div>
+              </div>
+
+              <!-- Org 3 -->
+              <div class="col-2">
+                <div class="card org-card shadow-sm text-center">
+                  <div class="org-icon" style="color:#9C5FCC;">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                  <p class="org-name">Sports Club</p>
+                  <p class="org-members">210 members</p>
+                </div>
+              </div>
+
+              <!-- Org 4 -->
+              <div class="col-2">
+                <div class="card org-card shadow-sm text-center">
+                  <div class="org-icon" style="color:#FF6B35;">
+                    <i class="bi bi-newspaper"></i>
+                  </div>
+                  <p class="org-name">Campus Press</p>
+                  <p class="org-members">85 members</p>
+                </div>
+              </div>
+
+              <!-- Org 5 -->
+              <div class="col-2">
+                <div class="card org-card shadow-sm text-center">
+                  <div class="org-icon" style="color:#9C5FCC;">
+                    <i class="bi bi-music-note"></i>
+                  </div>
+                  <p class="org-name">Music Circle</p>
+                  <p class="org-members">160 members</p>
+                </div>
+              </div>
+
+              <!-- Org 6 -->
+              <div class="col-2">
+                <div class="card org-card shadow-sm text-center">
+                  <div class="org-icon" style="color:#1D9E75;">
+                    <i class="bi bi-leaf"></i>
+                  </div>
+                  <p class="org-name">Eco Warriors</p>
+                  <p class="org-members">98 members</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="col-12 col-lg-4">
+          <!-- This Week Section -->
+          <div class="card sidebar-card mb-4">
+            <div class="sidebar-card-header d-flex justify-content-between align-items-center">
+              <h6 class="fw-semibold mb-0">This Week</h6>
+              <span class="text-danger" style="font-size:13px; font-weight:600;">3 events</span>
+            </div>
+            <div class="sidebar-card-body">
+              <!-- Event 1 -->
+              <div class="week-event-item">
+                <div class="d-flex gap-2">
+                  <div class="week-event-date">18</div>
+                  <div style="flex-grow:1;">
+                    <p class="week-event-title">Research Summit 2025</p>
+                    <p class="week-event-time">9:00 AM • CCS Auditorium</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Event 2 -->
+              <div class="week-event-item">
+                <div class="d-flex gap-2">
+                  <div class="week-event-date">20</div>
+                  <div style="flex-grow:1;">
+                    <p class="week-event-title">Campus Music Fest</p>
+                    <p class="week-event-time">4:00 PM • Open Court</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Event 3 -->
+              <div class="week-event-item">
+                <div class="d-flex gap-2">
+                  <div class="week-event-date">22</div>
+                  <div style="flex-grow:1;">
+                    <p class="week-event-title">Intramurals Opening</p>
+                    <p class="week-event-time">8:00 AM • Gymnasium</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Latest Announcements Section -->
+          <div class="card sidebar-card">
+            <div class="sidebar-card-header d-flex justify-content-between align-items-center">
+              <h6 class="fw-semibold mb-0">Latest Announcements</h6>
+              <a href="#" style="color:#C0272D; text-decoration:none; font-size:12px;">All</a>
+            </div>
+            <div class="sidebar-card-body">
+              <!-- Announcement 1 -->
+              <div class="announcement-item">
+                <div class="d-flex gap-2">
+                  <i class="bi bi-info-circle announcement-icon" style="color:#FF6B35;"></i>
+                  <div style="flex-grow:1;">
+                    <p class="announcement-title">Enrollment period extended</p>
+                    <p class="announcement-date">Mar 12, 2026</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Announcement 2 -->
+              <div class="announcement-item">
+                <div class="d-flex gap-2">
+                  <i class="bi bi-bookmark announcement-icon" style="color:#9C5FCC;"></i>
+                  <div style="flex-grow:1;">
+                    <p class="announcement-title">Scholarship applications open</p>
+                    <p class="announcement-date">Mar 10, 2026</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Announcement 3 -->
+              <div class="announcement-item">
+                <div class="d-flex gap-2">
+                  <i class="bi bi-check-circle announcement-icon" style="color:#1D9E75;"></i>
+                  <div style="flex-grow:1;">
+                    <p class="announcement-title">No classes on March 25</p>
+                    <p class="announcement-date">Mar 8, 2026</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ADMIN PAGE ── -->
+  <div id="adminPage" style="display:none; background:#f0f2f5; height:100vh; width:100%; position:fixed; top:0; left:0; overflow-y:scroll;">
+    
+    <!-- Sidebar -->
+    <div style="width:200px; background:#C0272D; color:#fff; padding:20px; min-height:100vh; position:fixed; left:0; top:0; overflow-y:auto;">
+      <div style="text-align:center; margin-bottom:25px;">
+        <div style="width:45px; height:45px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; margin:0 auto 8px;">C</div>
+        <p style="margin:0; font-size:12px; font-weight:600;">CampusConnect</p>
+        <p style="margin:3px 0 0 0; font-size:9px; opacity:0.8;">Admin Portal</p>
+      </div>
+
+      <div style="margin-bottom:60px;">
+        <p style="font-size:11px; opacity:0.6; text-transform:uppercase; margin:0 0 12px 0; font-weight:600;">Main</p>
+        <a href="#" onclick="showAdminSection('dashboard'); return false;" class="admin-nav-item active" id="nav-dashboard">
+          <i class="bi bi-speedometer2" style="margin-right:8px;"></i>Dashboard
+        </a>
+        <a href="#" onclick="showAdminSection('events'); return false;" class="admin-nav-item" id="nav-events">
+          <i class="bi bi-calendar-event" style="margin-right:8px;"></i>Event Management
+        </a>
+        <a href="#" onclick="showAdminSection('announcements'); return false;" class="admin-nav-item" id="nav-announcements">
+          <i class="bi bi-megaphone" style="margin-right:8px;"></i>Announcements
+        </a>
+        <a href="#" onclick="showAdminSection('users'); return false;" class="admin-nav-item" id="nav-users">
+          <i class="bi bi-people" style="margin-right:8px;"></i>User Management
+        </a>
+        <a href="#" onclick="showAdminSection('settings'); return false;" class="admin-nav-item" id="nav-settings">
+          <i class="bi bi-gear" style="margin-right:8px;"></i>Settings
+        </a>
+      </div>
+
+      <div style="position:absolute; bottom:20px; left:20px; right:20px; border-top:1px solid rgba(255,255,255,0.2); padding-top:20px;">
+        <div style="display:flex; align-items:center; gap:10px; padding:10px; background:rgba(255,255,255,0.1); border-radius:8px; cursor:pointer;" onclick="logout(); return false;">
+          <div style="width:32px; height:32px; background:rgba(255,255,255,0.3); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">
+            <i class="bi bi-person-fill"></i>
+          </div>
+          <div style="font-size:12px;">
+            <p style="margin:0; font-weight:600;" id="adminName">Administrator</p>
+            <p style="margin:0; opacity:0.7; font-size:10px;">Logout</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div style="margin-left:200px; width:calc(100% - 200px); padding:20px;">
+      
+      <!-- Header -->
+      <div style="background:#fff; padding:20px; border-radius:8px; margin-bottom:20px; box-shadow:0 1px 3px rgba(0,0,0,0.1); display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 id="admin-section-title" style="margin:0; font-size:24px; font-weight:700; color:#1a1a1a;">Dashboard</h3>
+          <p style="margin:4px 0 0 0; font-size:13px; color:#aaa;" id="admin-section-date">Thursday, March 14, 2026 • Welcome, Administrator</p>
+        </div>
+        <div style="display:flex; gap:15px; align-items:center;">
+          <input type="text" class="form-control" placeholder="Search..." style="width:200px; height:36px; border-color:#e5e7eb; font-size:13px; border-radius:6px;"/>
+          <button class="btn btn-link" style="color:#C0272D; text-decoration:none;"><i class="bi bi-bell" style="font-size:18px;"></i></button>
+        </div>
+      </div>
+
+      <!-- Dashboard Section -->
+      <div id="dashboard-section">
+        <!-- Stats Cards -->
+        <div class="row g-3" style="margin-bottom:20px;">
+          <div class="col-12 col-md-3">
+            <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+              <div style="font-size:28px; color:#C0272D; font-weight:700;">5</div>
+              <p style="margin:8px 0 0 0; color:#666; font-size:13px;">Pending Approvals</p>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+              <div style="font-size:28px; color:#FF9500; font-weight:700;">31</div>
+              <p style="margin:8px 0 0 0; color:#666; font-size:13px;">Approved Events</p>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+              <div style="font-size:28px; color:#4A90E2; font-weight:700;">3,241</div>
+              <p style="margin:8px 0 0 0; color:#666; font-size:13px;">Total Users</p>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+              <div style="font-size:28px; color:#1D9E75; font-weight:700;">12</div>
+              <p style="margin:8px 0 0 0; color:#666; font-size:13px;">Announcements</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending Approvals -->
+        <div class="row g-3">
+          <div class="col-12 col-lg-8">
+            <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h5 style="margin:0; font-weight:700; color:#1a1a1a;">Pending Approvals</h5>
+                <button style="background:#C0272D; color:#fff; border:none; padding:8px 12px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+                  <i class="bi bi-pencil" style="margin-right:4px;"></i>Manage Events
+                </button>
+              </div>
+              <div style="overflow-x:auto;">
+                <table style="width:100%; font-size:13px;">
+                  <thead>
+                    <tr style="border-bottom:2px solid #e5e7eb; color:#999;">
+                      <th style="padding:12px; text-align:left; font-weight:600;">EVENT</th>
+                      <th style="padding:12px; text-align:left; font-weight:600;">ORG</th>
+                      <th style="padding:12px; text-align:left; font-weight:600;">CATEGORY</th>
+                      <th style="padding:12px; text-align:center; font-weight:600;">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom:1px solid #e5e7eb;">
+                      <td style="padding:12px; color:#C0272D; font-weight:600;">Research Summit 2026</td>
+                      <td style="padding:12px;">CSS Society</td>
+                      <td style="padding:12px;"><span style="background:#E8F4F8; color:#4A90E2; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Academic</span></td>
+                      <td style="padding:12px; text-align:center;">
+                        <button style="background:#4CAF50; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; margin-right:6px;">Approve</button>
+                        <button style="background:#f44336; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Reject</button>
+                      </td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e5e7eb;">
+                      <td style="padding:12px; color:#9C5FCC; font-weight:600;">Campus Music Fest</td>
+                      <td style="padding:12px;">Music Circle</td>
+                      <td style="padding:12px;"><span style="background:#F0E8F8; color:#9C5FCC; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Social</span></td>
+                      <td style="padding:12px; text-align:center;">
+                        <button style="background:#4CAF50; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; margin-right:6px;">Approve</button>
+                        <button style="background:#f44336; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Reject</button>
+                      </td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e5e7eb;">
+                      <td style="padding:12px; color:#8B0000; font-weight:600;">Hackathon 2025</td>
+                      <td style="padding:12px;">CSS Society</td>
+                      <td style="padding:12px;"><span style="background:#FFE8E8; color:#8B0000; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Org Event</span></td>
+                      <td style="padding:12px; text-align:center;">
+                        <button style="background:#4CAF50; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; margin-right:6px;">Approve</button>
+                        <button style="background:#f44336; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Reject</button>
+                      </td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e5e7eb;">
+                      <td style="padding:12px; color:#FF6B35; font-weight:600;">Intramurals Opening</td>
+                      <td style="padding:12px;">Sports Club</td>
+                      <td style="padding:12px;"><span style="background:#FEE8E8; color:#FF6B35; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Sports</span></td>
+                      <td style="padding:12px; text-align:center;">
+                        <button style="background:#4CAF50; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; margin-right:6px;">Approve</button>
+                        <button style="background:#f44336; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Reject</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding:12px; color:#4A90E2; font-weight:600;">Scholarship Fair</td>
+                      <td style="padding:12px;">Student Gov</td>
+                      <td style="padding:12px;"><span style="background:#E8F4F8; color:#4A90E2; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Academic</span></td>
+                      <td style="padding:12px; text-align:center;">
+                        <button style="background:#4CAF50; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; margin-right:6px;">Approve</button>
+                        <button style="background:#f44336; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Reject</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity & Submissions -->
+          <div class="col-12 col-lg-4">
+            <!-- Recent Activity -->
+            <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:20px;">
+              <h5 style="margin:0 0 16px 0; font-weight:700; color:#1a1a1a; font-size:14px;">Recent Activity</h5>
+              <div style="font-size:12px;">
+                <div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; align-items:flex-start; gap:10px;">
+                  <i class="bi bi-x-circle" style="color:#f44336; margin-top:2px;"></i>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">Art & Culture Week <span style="font-weight:400; color:#999;">was rejected</span></p>
+                    <p style="margin:2px 0 0 0; color:#999; font-size:11px;">Just now • Archive</p>
+                  </div>
+                </div>
+                <div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; align-items:flex-start; gap:10px;">
+                  <i class="bi bi-x-circle" style="color:#f44336; margin-top:2px;"></i>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">Art & Culture Week <span style="font-weight:400; color:#999;">was rejected</span></p>
+                    <p style="margin:2px 0 0 0; color:#999; font-size:11px;">Just now • Archive</p>
+                  </div>
+                </div>
+                <div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; align-items:flex-start; gap:10px;">
+                  <i class="bi bi-check-circle" style="color:#4CAF50; margin-top:2px;"></i>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">Scholarship Fair <span style="font-weight:400; color:#999;">was approved</span></p>
+                    <p style="margin:2px 0 0 0; color:#999; font-size:11px;">2 hours ago • Admin</p>
+                  </div>
+                </div>
+                <div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; align-items:flex-start; gap:10px;">
+                  <i class="bi bi-person" style="color:#2196F3; margin-top:2px;"></i>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">12 new students <span style="font-weight:400; color:#999;">registered today</span></p>
+                    <p style="margin:2px 0 0 0; color:#999; font-size:11px;">3 hours ago</p>
+                  </div>
+                </div>
+                <div style="padding:12px; display:flex; align-items:flex-start; gap:10px;">
+                  <i class="bi bi-info-circle" style="color:#FF9500; margin-top:2px;"></i>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">No classes on March 25 <span style="font-weight:400; color:#999;">posted</span></p>
+                    <p style="margin:2px 0 0 0; color:#999; font-size:11px;">Yesterday, 2:30 PM • Admin</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Submissions -->
+            <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+              <h5 style="margin:0 0 16px 0; font-weight:700; color:#1a1a1a; font-size:14px;">Recent Submissions</h5>
+              <div style="font-size:12px;">
+                <div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; align-items:center; gap:12px;">
+                  <div style="width:32px; height:32px; background:#E8F4F8; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#4A90E2; font-weight:600; font-size:14px;">
+                    <i class="bi bi-calendar-event"></i>
+                  </div>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">Hackathon 2025</p>
+                    <p style="margin:2px 0 0 0; color:#999; font-size:11px;">CSS Society • Mar 12, 2026</p>
+                  </div>
+                  <span style="background:#FFF3CD; color:#856404; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600; margin-left:auto;">Pending</span>
+                </div>
+                <div style="padding:12px; border-bottom:1px solid #e5e7eb; display:flex; align-items:center; gap:12px;">
+                  <div style="width:32px; height:32px; background:#F0E8F8; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#9C5FCC; font-weight:600; font-size:14px;">
+                    <i class="bi bi-music-note"></i>
+                  </div>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">Campus Music Fest</p>
+                    <p style="margin:2px 0 0 0; color:#999; font-size:11px;">Music Circle • Mar 12, 2026</p>
+                  </div>
+                  <span style="background:#FFF3CD; color:#856404; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600; margin-left:auto;">Pending</span>
+                </div>
+                <div style="padding:12px; display:flex; align-items:center; gap:12px;">
+                  <div style="width:32px; height:32px; background:#FFE8E8; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#8B0000; font-weight:600; font-size:14px;">
+                    <i class="bi bi-folder"></i>
+                  </div>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">Campus Press Org</p>
+                    <p style="margin:2px 0 0 0; color:#999; font-size:11px;">Press Team • Mar 12, 2026</p>
+                  </div>
+                  <span style="background:#FFF3CD; color:#856404; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600; margin-left:auto;">Pending</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other sections (minimal placeholders) -->
+      <div id="events-section" style="display:none;">
+        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
+          <i class="bi bi-calendar-event" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
+          <p style="margin:0;">Event Management Coming Soon</p>
+        </div>
+      </div>
+
+      <div id="announcements-section" style="display:none;">
+        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
+          <i class="bi bi-megaphone" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
+          <p style="margin:0;">Announcements Management Coming Soon</p>
+        </div>
+      </div>
+
+      <div id="users-section" style="display:none;">
+        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
+          <i class="bi bi-people" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
+          <p style="margin:0;">User Management Coming Soon</p>
+        </div>
+      </div>
+
+      <div id="settings-section" style="display:none;">
+        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
+          <i class="bi bi-gear" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
+          <p style="margin:0;">Settings Coming Soon</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EVENT DETAILS MODAL -->
+  <div id="eventDetailsModal" class="event-details-modal">
+    <div class="event-details-content">
+      <button class="event-close-btn" onclick="closeEventDetails()">&times;</button>
+      
+      <div class="event-details-header">
+        <h2 id="modalEventTitle" class="event-details-title">Event Title</h2>
+        <span id="modalEventCategory" class="event-details-category-badge">Category</span>
+      </div>
+
+      <div class="event-details-body">
+        <div class="event-details-section">
+          <h4 class="section-title">About This Event</h4>
+          <p id="modalEventDescription" class="event-description">Event description goes here</p>
+        </div>
+
+        <div class="event-details-info">
+          <div class="info-item">
+            <i class="bi bi-calendar-event info-icon"></i>
+            <div>
+              <p class="info-label">Date</p>
+              <p id="modalEventDate" class="info-value">Mar 18, 2026</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <i class="bi bi-clock info-icon"></i>
+            <div>
+              <p class="info-label">Time</p>
+              <p id="modalEventTime" class="info-value">9:00 AM</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <i class="bi bi-geo-alt info-icon"></i>
+            <div>
+              <p class="info-label">Location</p>
+              <p id="modalEventLocation" class="info-value">CCS Auditorium</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <i class="bi bi-people info-icon"></i>
+            <div>
+              <p class="info-label">Attending</p>
+              <p id="modalEventAttendees" class="info-value">120 people</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="event-details-section">
+          <h4 class="section-title">Event Highlights</h4>
+          <ul id="modalEventDetails" class="highlights-list">
+            <li>Highlight 1</li>
+            <li>Highlight 2</li>
+            <li>Highlight 3</li>
+          </ul>
+        </div>
+
+        <div class="event-details-footer">
+          <button id="modalRegisterBtn" class="btn btn-lg btn-danger w-100" onclick="registerForEvent()">Register Now</button>
+          <button class="btn btn-lg btn-outline-secondary w-100 mt-2" onclick="closeEventDetails()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom Script -->
+  <script src="script.js"></script>
+</body>
+</html>
