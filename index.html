@@ -259,7 +259,7 @@
       <!-- Welcome Banner -->
       <div class="welcome-banner">
         <p>THURSDAY, MARCH 13, 2026</p>
-        <h2>Good morning, <span id="welcomeName">Alex</span>!</h2>
+        <h2>Good morning, <span id="welcomeName">Student</span>!</h2>
         <p class="welcome-banner-text">You have 3 upcoming events this week. Stay connected with what's happening on campus.</p>
         <button class="btn btn-light">
           <i class="bi bi-calendar-event me-2"></i>Browse Events
@@ -462,8 +462,8 @@
                   <div class="org-icon" style="color:#FF9500;">
                     <i class="bi bi-theater-masks"></i>
                   </div>
-                  <p class="org-name">Drama Guild</p>
-                  <p class="org-members">140 members</p>
+                  <p class="org-name">Gender Club</p>
+                  <p class="org-members">40 members</p>
                 </div>
               </div>
 
@@ -604,8 +604,254 @@
     </div>
   </div>
 
+  <!-- ── ORGANIZER PAGE ── -->
+  <div id="organizerPage" style="display:none; background:#f5f5f5; height:100vh; width:100%; position:fixed; top:0; left:0; overflow:hidden;">
+    <!-- Sidebar -->
+    <div style="width:180px; background:#C0272D; color:#fff; padding:24px 16px; min-height:100vh; position:fixed; left:0; top:0; overflow-y:auto;">
+      <!-- Logo -->
+      <div style="text-align:center; margin-bottom:40px;">
+        <div style="width:40px; height:40px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; margin:0 auto 8px; color:#fff;">C</div>
+        <p style="margin:0; font-size:13px; font-weight:600;">CampusConnect</p>
+        <p style="margin:3px 0 0 0; font-size:10px; opacity:0.75;">Organizer Portal</p>
+      </div>
+
+      <!-- Navigation -->
+      <nav style="margin-bottom:80px;">
+        <p style="font-size:10px; opacity:0.6; text-transform:uppercase; margin:0 0 12px 0; font-weight:600; letter-spacing:0.5px;">Main</p>
+        <a href="#" onclick="showOrganizerSection('dashboard'); return false;" class="org-nav-item active" id="org-nav-dashboard" style="display:block; color:#fff; text-decoration:none; padding:12px 12px; border-radius:6px; margin-bottom:6px; font-size:13px; font-weight:500; transition:all 0.2s; background:rgba(255,255,255,0.15);">
+          <i class="bi bi-speedometer2" style="margin-right:8px; width:16px;"></i>Dashboard
+        </a>
+        <a href="#" onclick="showOrganizerSection('events'); return false;" class="org-nav-item" id="org-nav-events" style="display:block; color:#fff; text-decoration:none; padding:12px 12px; border-radius:6px; margin-bottom:6px; font-size:13px; font-weight:500; transition:all 0.2s;">
+          <i class="bi bi-calendar-event" style="margin-right:8px; width:16px;"></i>My Events
+        </a>
+        <a href="#" onclick="showOrganizerSection('registrations'); return false;" class="org-nav-item" id="org-nav-registrations" style="display:block; color:#fff; text-decoration:none; padding:12px 12px; border-radius:6px; margin-bottom:6px; font-size:13px; font-weight:500; transition:all 0.2s;">
+          <i class="bi bi-person-check" style="margin-right:8px; width:16px;"></i>Registrations
+        </a>
+
+        <p style="font-size:10px; opacity:0.6; text-transform:uppercase; margin:24px 0 12px 0; font-weight:600; letter-spacing:0.5px;">Organization</p>
+        <a href="#" onclick="showOrganizerSection('profile'); return false;" class="org-nav-item" id="org-nav-profile" style="display:block; color:#fff; text-decoration:none; padding:12px 12px; border-radius:6px; margin-bottom:6px; font-size:13px; font-weight:500; transition:all 0.2s;">
+          <i class="bi bi-building" style="margin-right:8px; width:16px;"></i>Org Profile
+        </a>
+        <a href="#" onclick="showOrganizerSection('settings'); return false;" class="org-nav-item" id="org-nav-settings" style="display:block; color:#fff; text-decoration:none; padding:12px 12px; border-radius:6px; margin-bottom:6px; font-size:13px; font-weight:500; transition:all 0.2s;">
+          <i class="bi bi-gear" style="margin-right:8px; width:16px;"></i>Settings
+        </a>
+      </nav>
+
+      <!-- User Profile (Bottom) -->
+      <div style="position:absolute; bottom:20px; left:16px; right:16px; border-top:1px solid rgba(255,255,255,0.2); padding-top:16px;">
+        <div style="display:flex; align-items:center; gap:10px; padding:8px; cursor:pointer; border-radius:6px; transition:background 0.2s;" onclick="logout(); return false;">
+          <div style="width:32px; height:32px; background:rgba(255,255,255,0.3); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0;">
+            <i class="bi bi-person-fill"></i>
+          </div>
+          <div style="font-size:12px; flex:1;">
+            <p style="margin:0; font-weight:600;" id="organizerName">Officer Name</p>
+            <p style="margin:0; opacity:0.7; font-size:10px;">Logout</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div style="margin-left:180px; width:calc(100% - 180px); padding:24px; display:flex; flex-direction:column; height:100%; overflow-y:auto;">
+      <!-- Header -->
+      <div style="background:#fff; padding:24px; border-radius:8px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.1); display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0;">
+        <div>
+          <h2 id="org-section-title" style="margin:0; font-size:24px; font-weight:700; color:#1a1a1a;">Dashboard</h2>
+          <p style="margin:6px 0 0 0; font-size:13px; color:#999;" id="org-section-date">Thursday, March 13, 2026 • CSS Society</p>
+        </div>
+        <button style="background:#C0272D; color:#fff; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
+          <i class="bi bi-plus-lg"></i>New Event
+        </button>
+      </div>
+
+      <!-- Dashboard Section -->
+      <div id="org-dashboard-section">
+        <!-- Stats Cards -->
+        <div class="row g-3" style="margin-bottom:24px;">
+          <div class="col-12 col-md-6 col-lg-3">
+            <div style="background:#fff; padding:24px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); border-left:4px solid #C0272D;">
+              <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:600; margin-bottom:8px;">Total Events</div>
+              <div style="font-size:32px; color:#C0272D; font-weight:700; margin-bottom:4px;">4</div>
+              <p style="margin:0; color:#666; font-size:12px;">Created by organization</p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div style="background:#fff; padding:24px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); border-left:4px solid #FFC107;">
+              <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:600; margin-bottom:8px;">Pending Approval</div>
+              <div style="font-size:32px; color:#FFC107; font-weight:700; margin-bottom:4px;">2</div>
+              <p style="margin:0; color:#666; font-size:12px;">Awaiting admin review</p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div style="background:#fff; padding:24px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); border-left:4px solid #4CAF50;">
+              <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:600; margin-bottom:8px;">Approved Events</div>
+              <div style="font-size:32px; color:#4CAF50; font-weight:700; margin-bottom:4px;">2</div>
+              <p style="margin:0; color:#666; font-size:12px;">Ready to accept registrations</p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3">
+            <div style="background:#fff; padding:24px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); border-left:4px solid #2196F3;">
+              <div style="font-size:11px; color:#999; text-transform:uppercase; font-weight:600; margin-bottom:8px;">Total Registrations</div>
+              <div style="font-size:32px; color:#2196F3; font-weight:700; margin-bottom:4px;">127</div>
+              <p style="margin:0; color:#666; font-size:12px;">Across all events</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Events Overview & Quick Actions -->
+        <div class="row g-3">
+          <div class="col-12 col-lg-8">
+            <!-- Events Table -->
+            <div style="background:#fff; padding:24px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h4 style="margin:0; font-weight:700; color:#1a1a1a; font-size:15px;">My Events Overview</h4>
+                <a href="#" style="color:#C0272D; text-decoration:none; font-size:13px; font-weight:500;">All Events</a>
+              </div>
+              <div style="overflow-x:auto;">
+                <table style="width:100%; font-size:13px;">
+                  <thead>
+                    <tr style="border-bottom:2px solid #f0f0f0; color:#999; background:#fafafa;">
+                      <th style="padding:12px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase;">EVENT</th>
+                      <th style="padding:12px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase;">DATE</th>
+                      <th style="padding:12px; text-align:center; font-weight:600; font-size:11px; text-transform:uppercase;">REGISTRATIONS</th>
+                      <th style="padding:12px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase;">STATUS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom:1px solid #f0f0f0;">
+                      <td style="padding:14px 12px; color:#C0272D; font-weight:600;">Hackathon 2026</td>
+                      <td style="padding:14px 12px; color:#666;">Mar 25, 2026</td>
+                      <td style="padding:14px 12px; text-align:center;">
+                        <div style="width:100%; background:#f0f0f0; border-radius:4px; height:6px; position:relative; overflow:hidden;">
+                          <div style="background:#C0272D; height:100%; width:88%;"></div>
+                        </div>
+                        <span style="font-size:11px; color:#999; display:block; margin-top:4px;">88 / 100</span>
+                      </td>
+                      <td style="padding:14px 12px;"><span style="background:#D4EDDA; color:#155724; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Approved</span></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #f0f0f0;">
+                      <td style="padding:14px 12px; color:#333; font-weight:600;">CSS Seminar</td>
+                      <td style="padding:14px 12px; color:#666;">Mar 30, 2026</td>
+                      <td style="padding:14px 12px; text-align:center;">
+                        <div style="width:100%; background:#f0f0f0; border-radius:4px; height:6px; position:relative; overflow:hidden;">
+                          <div style="background:#FFC107; height:100%; width:65%;"></div>
+                        </div>
+                        <span style="font-size:11px; color:#999; display:block; margin-top:4px;">39 / 60</span>
+                      </td>
+                      <td style="padding:14px 12px;"><span style="background:#D4EDDA; color:#155724; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Approved</span></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #f0f0f0;">
+                      <td style="padding:14px 12px; color:#333; font-weight:600;">Research Summit</td>
+                      <td style="padding:14px 12px; color:#666;">Apr 5, 2026</td>
+                      <td style="padding:14px 12px; text-align:center;">
+                        <div style="width:100%; background:#f0f0f0; border-radius:4px; height:6px; position:relative; overflow:hidden;">
+                          <div style="background:#FFC107; height:100%; width:0%;"></div>
+                        </div>
+                        <span style="font-size:11px; color:#999; display:block; margin-top:4px;">0 / 120</span>
+                      </td>
+                      <td style="padding:14px 12px;"><span style="background:#FFF3CD; color:#856404; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Pending</span></td>
+                    </tr>
+                    <tr>
+                      <td style="padding:14px 12px; color:#333; font-weight:600;">CSS Sports Fest</td>
+                      <td style="padding:14px 12px; color:#666;">Apr 12, 2026</td>
+                      <td style="padding:14px 12px; text-align:center;">
+                        <div style="width:100%; background:#f0f0f0; border-radius:4px; height:6px; position:relative; overflow:hidden;">
+                          <div style="background:#FFC107; height:100%; width:0%;"></div>
+                        </div>
+                        <span style="font-size:11px; color:#999; display:block; margin-top:4px;">0 / 80</span>
+                      </td>
+                      <td style="padding:14px 12px;"><span style="background:#FFF3CD; color:#856404; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Pending</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions & Recent Activity -->
+          <div class="col-12 col-lg-4">
+            <!-- Quick Actions -->
+            <div style="background:#fff; padding:24px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); margin-bottom:20px;">
+              <h4 style="margin:0 0 16px 0; font-weight:700; color:#1a1a1a; font-size:15px;">Quick Actions</h4>
+              <button style="width:100%; background:#C0272D; color:#fff; border:none; padding:12px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:6px; transition:opacity 0.2s;">
+                <i class="bi bi-plus-lg"></i>Create New Event
+              </button>
+              <button style="width:100%; background:#fff; color:#C0272D; border:2px solid #C0272D; padding:12px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:all 0.2s;">
+                <i class="bi bi-eye"></i>View Registrations
+              </button>
+            </div>
+
+            <!-- Recent Activity -->
+            <div style="background:#fff; padding:24px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+              <h4 style="margin:0 0 16px 0; font-weight:700; color:#1a1a1a; font-size:15px;">Recent Activity</h4>
+              <div style="font-size:12px;">
+                <div style="padding:12px 0; border-bottom:1px solid #f0f0f0; display:flex; gap:10px;">
+                  <i class="bi bi-check-circle" style="color:#4CAF50; margin-top:2px; flex-shrink:0; font-size:14px;"></i>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">Hackathon 2026 <span style="font-weight:400; color:#999;">was approved by admin</span></p>
+                    <p style="margin:4px 0 0 0; color:#999; font-size:11px;">2 hours ago</p>
+                  </div>
+                </div>
+                <div style="padding:12px 0; border-bottom:1px solid #f0f0f0; display:flex; gap:10px;">
+                  <i class="bi bi-person-plus" style="color:#2196F3; margin-top:2px; flex-shrink:0; font-size:14px;"></i>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">5 new registrants <span style="font-weight:400; color:#999;">for CSS Seminar</span></p>
+                    <p style="margin:4px 0 0 0; color:#999; font-size:11px;">3 hours ago</p>
+                  </div>
+                </div>
+                <div style="padding:12px 0; border-bottom:1px solid #f0f0f0; display:flex; gap:10px;">
+                  <i class="bi bi-clock" style="color:#FFC107; margin-top:2px; flex-shrink:0; font-size:14px;"></i>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">Research Summit <span style="font-weight:400; color:#999;">submitted for approval</span></p>
+                    <p style="margin:4px 0 0 0; color:#999; font-size:11px;">Yesterday</p>
+                  </div>
+                </div>
+                <div style="padding:12px 0; display:flex; gap:10px;">
+                  <i class="bi bi-clock" style="color:#FFC107; margin-top:2px; flex-shrink:0; font-size:14px;"></i>
+                  <div>
+                    <p style="margin:0; font-weight:600; color:#1a1a1a;">CSS Sports Fest <span style="font-weight:400; color:#999;">submitted for approval</span></p>
+                    <p style="margin:4px 0 0 0; color:#999; font-size:11px;">2 days ago</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placeholder Sections -->
+      <div id="org-events-section" class="section-hidden">
+        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
+          <i class="bi bi-calendar-event" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
+          <p style="margin:0;">My Events Management Coming Soon</p>
+        </div>
+      </div>
+
+      <div id="org-registrations-section" class="section-hidden">
+        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
+          <i class="bi bi-person-check" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
+          <p style="margin:0;">Registrations Management Coming Soon</p>
+        </div>
+      </div>
+
+      <div id="org-profile-section" class="section-hidden">
+        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
+          <i class="bi bi-building" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
+          <p style="margin:0;">Organization Profile Coming Soon</p>
+        </div>
+      </div>
+
+      <div id="org-settings-section" class="section-hidden">
+        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
+          <i class="bi bi-gear" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
+          <p style="margin:0;">Organization Settings Coming Soon</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── ADMIN PAGE ── -->
-  <div id="adminPage" style="display:none; background:#f0f2f5; height:100vh; width:100%; position:fixed; top:0; left:0; overflow-y:scroll;">
+  <div id="adminPage" style="background:#f0f2f5; height:100vh; width:100%; position:fixed; top:0; left:0; display:none; flex-direction:row; overflow:hidden;">
     
     <!-- Sidebar -->
     <div style="width:200px; background:#C0272D; color:#fff; padding:20px; min-height:100vh; position:fixed; left:0; top:0; overflow-y:auto;">
@@ -648,10 +894,10 @@
     </div>
 
     <!-- Main Content -->
-    <div style="margin-left:200px; width:calc(100% - 200px); padding:20px;">
+    <div style="margin-left:200px; width:calc(100% - 200px); padding:20px; display:flex; flex-direction:column; height:100%; overflow-y:auto;">
       
       <!-- Header -->
-      <div style="background:#fff; padding:20px; border-radius:8px; margin-bottom:20px; box-shadow:0 1px 3px rgba(0,0,0,0.1); display:flex; justify-content:space-between; align-items:center;">
+      <div style="background:#fff; padding:20px; border-radius:8px; margin-bottom:20px; box-shadow:0 1px 3px rgba(0,0,0,0.1); display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
         <div>
           <h3 id="admin-section-title" style="margin:0; font-size:24px; font-weight:700; color:#1a1a1a;">Dashboard</h3>
           <p style="margin:4px 0 0 0; font-size:13px; color:#aaa;" id="admin-section-date">Thursday, March 14, 2026 • Welcome, Administrator</p>
@@ -849,28 +1095,28 @@
       </div>
 
       <!-- Other sections (minimal placeholders) -->
-      <div id="events-section" style="display:none;">
+      <div id="events-section" class="section-hidden">
         <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
           <i class="bi bi-calendar-event" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
           <p style="margin:0;">Event Management Coming Soon</p>
         </div>
       </div>
 
-      <div id="announcements-section" style="display:none;">
+      <div id="announcements-section" class="section-hidden">
         <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
           <i class="bi bi-megaphone" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
           <p style="margin:0;">Announcements Management Coming Soon</p>
         </div>
       </div>
 
-      <div id="users-section" style="display:none;">
+      <div id="users-section" class="section-hidden">
         <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
           <i class="bi bi-people" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
           <p style="margin:0;">User Management Coming Soon</p>
         </div>
       </div>
 
-      <div id="settings-section" style="display:none;">
+      <div id="settings-section" class="section-hidden">
         <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
           <i class="bi bi-gear" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
           <p style="margin:0;">Settings Coming Soon</p>

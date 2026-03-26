@@ -1,6 +1,6 @@
 const USERS = [
-  { email: 'student@example.com', password: 'student123', role: 'student', name: 'Alex Santos'     },
-  { email: 'officer@example.com', password: 'officer123', role: 'officer', name: 'Maria Dela Cruz' },
+  { email: 'student@example.com', password: 'student123', role: 'student', name: 'Student'     },
+  { email: 'officer@example.com', password: 'officer123', role: 'officer', name: 'Officer' },
   { email: 'admin@example.com',   password: 'admin123',   role: 'admin',   name: 'Administrator'  },
 ];
 
@@ -113,8 +113,7 @@ function handleLogin() {
     if (match.role === 'student') {
       loadStudentPage(match);
     } else if (match.role === 'officer') {
-      // Officer page (to be implemented)
-      alert('Officer page coming soon!');
+      loadOfficerPage(match);
     } else if (match.role === 'admin') {
       loadAdminPage(match);
     }
@@ -130,6 +129,67 @@ function loadStudentPage(user) {
   // Clear form fields
   document.getElementById('login-email').value = '';
   document.getElementById('login-password').value = '';
+}
+
+/* ── LOAD ORGANIZER PAGE ── */
+function loadOfficerPage(user) {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('organizerPage').style.display = 'flex';
+  document.getElementById('organizerName').textContent = user.name;
+  
+  // Clear form fields
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-password').value = '';
+  
+  // Initialize dashboard
+  showOrganizerSection('dashboard');
+}
+
+/* ── SHOW ORGANIZER SECTION ── */
+function showOrganizerSection(section) {
+  console.log('showOrganizerSection called with:', section);
+  
+  // Hide all sections with inline style
+  const sectionIds = ['org-dashboard-section', 'org-events-section', 'org-registrations-section', 'org-profile-section', 'org-settings-section'];
+  sectionIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      console.log('Hiding:', id);
+      el.style.display = 'none';
+      el.classList.add('section-hidden');
+    }
+  });
+  
+  // Show selected section with inline style
+  let sectionId = section === 'settings' ? 'org-settings-section' : 'org-' + section + '-section';
+  const target = document.getElementById(sectionId);
+  if (target) {
+    console.log('Showing:', sectionId);
+    target.style.display = 'block';
+    target.classList.remove('section-hidden');
+  }
+  
+  // Remove active class and update nav items
+  const navItems = document.querySelectorAll('.org-nav-item');
+  navItems.forEach(item => {
+    item.style.background = 'transparent';
+  });
+  
+  // Add active background to selected nav item
+  const activeNav = document.getElementById('org-nav-' + section);
+  if (activeNav) activeNav.style.background = 'rgba(255,255,255,0.15)';
+  
+  // Update title
+  const titles = {
+    'dashboard': 'Dashboard',
+    'events': 'My Events',
+    'registrations': 'Registrations',
+    'profile': 'Organization Profile',
+    'settings': 'Settings'
+  };
+  
+  const titleEl = document.getElementById('org-section-title');
+  if (titleEl) titleEl.textContent = titles[section] || 'Dashboard';
 }
 
 /* ── LOAD ADMIN PAGE ── */
@@ -148,51 +208,60 @@ function loadAdminPage(user) {
 
 /* ── SHOW ADMIN SECTION ── */
 function showAdminSection(section) {
-  // Hide all sections
-  document.getElementById('dashboard-section').style.display = 'none';
-  document.getElementById('events-section').style.display = 'none';
-  document.getElementById('announcements-section').style.display = 'none';
-  document.getElementById('users-section').style.display = 'none';
-  document.getElementById('settings-section').style.display = 'none';
+  console.log('showAdminSection called with:', section);
+  
+  // Hide all sections with inline style
+  const sectionIds = ['dashboard-section', 'events-section', 'announcements-section', 'users-section', 'settings-section'];
+  sectionIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      console.log('Hiding:', id);
+      el.style.display = 'none';
+      el.classList.add('section-hidden');
+    }
+  });
+  
+  // Show selected section with inline style
+  const sectionId = section + '-section';
+  const target = document.getElementById(sectionId);
+  if (target) {
+    console.log('Showing:', sectionId);
+    target.style.display = 'block';
+    target.classList.remove('section-hidden');
+  }
   
   // Remove active class from all nav items
-  document.querySelectorAll('.admin-nav-item').forEach(item => {
+  const navItems = document.querySelectorAll('.admin-nav-item');
+  navItems.forEach(item => {
     item.classList.remove('active');
   });
   
-  // Show selected section and mark nav item as active
-  switch(section) {
-    case 'dashboard':
-      document.getElementById('dashboard-section').style.display = 'block';
-      document.getElementById('nav-dashboard').classList.add('active');
-      document.getElementById('admin-section-title').textContent = 'Dashboard';
-      document.getElementById('admin-section-date').textContent = 'Thursday, March 14, 2026 • Welcome, Administrator';
-      break;
-    case 'events':
-      document.getElementById('events-section').style.display = 'block';
-      document.getElementById('nav-events').classList.add('active');
-      document.getElementById('admin-section-title').textContent = 'Event Management';
-      document.getElementById('admin-section-date').textContent = 'Thursday, March 14, 2026 • Manage all campus events';
-      break;
-    case 'announcements':
-      document.getElementById('announcements-section').style.display = 'block';
-      document.getElementById('nav-announcements').classList.add('active');
-      document.getElementById('admin-section-title').textContent = 'Announcements';
-      document.getElementById('admin-section-date').textContent = 'Thursday, March 14, 2026 • Manage announcements';
-      break;
-    case 'users':
-      document.getElementById('users-section').style.display = 'block';
-      document.getElementById('nav-users').classList.add('active');
-      document.getElementById('admin-section-title').textContent = 'User Management';
-      document.getElementById('admin-section-date').textContent = 'Thursday, March 14, 2026 • Manage users and permissions';
-      break;
-    case 'settings':
-      document.getElementById('settings-section').style.display = 'block';
-      document.getElementById('nav-settings').classList.add('active');
-      document.getElementById('admin-section-title').textContent = 'Settings';
-      document.getElementById('admin-section-date').textContent = 'Thursday, March 14, 2026 • System settings and configuration';
-      break;
-  }
+  // Add active class to selected nav item
+  const activeNav = document.getElementById('nav-' + section);
+  if (activeNav) activeNav.classList.add('active');
+  
+  // Update title and date
+  const titles = {
+    'dashboard': 'Dashboard',
+    'events': 'Event Management',
+    'announcements': 'Announcements',
+    'users': 'User Management',
+    'settings': 'Settings'
+  };
+  
+  const dates = {
+    'dashboard': 'Thursday, March 14, 2026 • Welcome, Administrator',
+    'events': 'Thursday, March 14, 2026 • Manage all campus events',
+    'announcements': 'Thursday, March 14, 2026 • Manage announcements',
+    'users': 'Thursday, March 14, 2026 • Manage users and permissions',
+    'settings': 'Thursday, March 14, 2026 • System settings and configuration'
+  };
+  
+  const titleEl = document.getElementById('admin-section-title');
+  const dateEl = document.getElementById('admin-section-date');
+  
+  if (titleEl) titleEl.textContent = titles[section] || 'Dashboard';
+  if (dateEl) dateEl.textContent = dates[section] || 'Thursday, March 14, 2026 • Welcome, Administrator';
 }
 
 /* ── LOGOUT HANDLER ── */
@@ -200,6 +269,7 @@ function logout() {
   currentUser = null;
   document.getElementById('loginPage').style.display = 'block';
   document.getElementById('studentPage').style.display = 'none';
+  document.getElementById('organizerPage').style.display = 'none';
   document.getElementById('adminPage').style.display = 'none';
   switchToLogin();
   clearLoginErrors();
