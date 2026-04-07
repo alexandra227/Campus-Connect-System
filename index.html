@@ -65,16 +65,6 @@
             <div class="invalid-feedback d-block" id="login-pass-error" style="display:none!important;"></div>
           </div>
 
-          <!-- Role -->
-          <div class="mb-3">
-            <label class="form-label text-muted" style="font-size:12px; font-weight:500;">Role</label>
-            <select id="login-role" class="form-control">
-              <option value="student">Student</option>
-              <option value="officer">Org Officer</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-
           <!-- Forgot -->
           <div class="text-end mb-4">
             <a href="#" class="link-crimson" style="font-size:12px;">Forgot password?</a>
@@ -256,28 +246,28 @@
 
     <!-- Main Content -->
     <div class="container-fluid py-4">
-      <!-- Welcome Banner -->
-      <div class="welcome-banner">
-        <p>THURSDAY, MARCH 13, 2026</p>
-        <h2>Good morning, <span id="welcomeName">Student</span>!</h2>
-        <p class="welcome-banner-text">You have 3 upcoming events this week. Stay connected with what's happening on campus.</p>
-        <button class="btn btn-light">
-          <i class="bi bi-calendar-event me-2"></i>Browse Events
-        </button>
+      <!-- Latest Updates Banner -->
+      <div class="latest-updates-banner">
+        <h3 style="margin-bottom: 12px; font-weight: 700; color: #1a1a1a; font-size: 24px;">Latest Updates</h3>
+        <div class="update-tabs">
+          <button class="update-tab-btn active" onclick="filterUpdates('all')">All</button>
+          <button class="update-tab-btn" onclick="filterUpdates('academic')">Academic</button>
+          <button class="update-tab-btn" onclick="filterUpdates('organizations')">Organizations</button>
+          <button class="update-tab-btn" onclick="filterUpdates('non-academic')">Non-Academic</button>
+          <button class="update-tab-btn" onclick="filterUpdates('council-events')">Council Events</button>
+        </div>
       </div>
 
       <div class="row">
         <!-- Main Content -->
-        <div class="col-12 col-lg-8">
+        <div class="col-12">
           <div style="margin-bottom:30px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-              <h5 style="font-weight:700; margin:0;">Upcoming Events</h5>
-              <a href="#" style="color:#C0272D; text-decoration:none; font-size:13px;">View all</a>
             </div>
 
             <div class="row g-3">
               <!-- Event 1 -->
-              <div class="col-12 col-md-4">
+              <div class="col-12 event-item" data-category="academic" data-department="Computer Science">
                 <div class="card event-card shadow-sm">
                   <div class="event-card-header" style="background:#E8F4F8; color:#4A90E2;">
                     <i class="bi bi-mortarboard"></i>
@@ -303,7 +293,7 @@
               </div>
 
               <!-- Event 2 -->
-              <div class="col-12 col-md-4">
+              <div class="col-12 event-item" data-category="non-academic" data-department="Computer Science">
                 <div class="card event-card shadow-sm">
                   <div class="event-card-header" style="background:#F0E8F8; color:#9C5FCC;">
                     <i class="bi bi-music-note"></i>
@@ -329,7 +319,7 @@
               </div>
 
               <!-- Event 3 -->
-              <div class="col-12 col-md-4">
+              <div class="col-12 event-item" data-category="non-academic" data-department="Computer Science">
                 <div class="card event-card shadow-sm">
                   <div class="event-card-header" style="background:#FEE8E8; color:#FF6B35;">
                     <i class="bi bi-basketball"></i>
@@ -355,7 +345,7 @@
               </div>
 
               <!-- Event 4 -->
-              <div class="col-12 col-md-4">
+              <div class="col-12 event-item" data-category="non-academic" data-department="Computer Science">
                 <div class="card event-card shadow-sm">
                   <div class="event-card-header" style="background:#F0E8F8; color:#9C5FCC;">
                     <i class="bi bi-code-square"></i>
@@ -382,7 +372,7 @@
               </div>
 
               <!-- Event 5 -->
-              <div class="col-12 col-md-4">
+              <div class="col-12 event-item" data-category="non-academic" data-department="Computer Science">
                 <div class="card event-card shadow-sm">
                   <div class="event-card-header" style="background:#FEE8E8; color:#FF6B35;">
                     <i class="bi bi-palette"></i>
@@ -408,7 +398,7 @@
               </div>
 
               <!-- Event 6 -->
-              <div class="col-12 col-md-4">
+              <div class="col-12 event-item" data-category="academic" data-department="Computer Science">
                 <div class="card event-card shadow-sm">
                   <div class="event-card-header" style="background:#E8F4F8; color:#4A90E2;">
                     <i class="bi bi-briefcase"></i>
@@ -434,6 +424,129 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Right Sidebar Section -->
+      <div class="row" style="margin-top: 30px;">
+        <div class="col-12">
+          <div style="display: flex; gap: 30px;">
+            <!-- This Week Section -->
+            <div class="card sidebar-card mb-4" style="flex: 1; min-width: 250px;">
+              <div class="sidebar-card-header d-flex justify-content-between align-items-center">
+                <h6 class="fw-semibold mb-0">This Week</h6>
+                <span class="text-danger" style="font-size:13px; font-weight:600;">3 events</span>
+              </div>
+              <div class="sidebar-card-body">
+                <!-- Event 1 -->
+                <div class="week-event-item">
+                  <div class="d-flex gap-2">
+                    <div class="week-event-date">18</div>
+                    <div style="flex-grow:1;">
+                      <p class="week-event-title">Research Summit 2025</p>
+                      <p class="week-event-time">9:00 AM • CCS Auditorium</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="week-event-item">
+                  <div class="d-flex gap-2">
+                    <div class="week-event-date">20</div>
+                    <div style="flex-grow:1;">
+                      <p class="week-event-title">Campus Music Fest</p>
+                      <p class="week-event-time">4:00 PM • Open Court</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Event 3 -->
+                <div class="week-event-item">
+                  <div class="d-flex gap-2">
+                    <div class="week-event-date">22</div>
+                    <div style="flex-grow:1;">
+                      <p class="week-event-title">Intramurals Opening</p>
+                      <p class="week-event-time">8:00 AM • Gymnasium</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          <!-- Calendar Section -->
+          <div class="card sidebar-card" style="flex: 1; min-width: 250px;">
+            <div class="sidebar-card-header d-flex justify-content-between align-items-center">
+              <h6 class="fw-semibold mb-0">March 2026</h6>
+              <a href="#" style="color:#C0272D; text-decoration:none; font-size:12px;">View Full Calendar</a>
+            </div>
+            <div class="sidebar-card-body">
+              <div class="calendar-container" style="width:100%;">
+                <table style="width:100%; font-size:12px; text-align:center;">
+                  <thead>
+                    <tr style="margin-bottom:10px;">
+                      <th style="padding:8px; color:#999; font-weight:500; font-size:11px; font-weight:600;">Su</th>
+                      <th style="padding:8px; color:#999; font-weight:500; font-size:11px; font-weight:600;">Mo</th>
+                      <th style="padding:8px; color:#999; font-weight:500; font-size:11px; font-weight:600;">Tu</th>
+                      <th style="padding:8px; color:#999; font-weight:500; font-size:11px; font-weight:600;">We</th>
+                      <th style="padding:8px; color:#999; font-weight:500; font-size:11px; font-weight:600;">Th</th>
+                      <th style="padding:8px; color:#999; font-weight:500; font-size:11px; font-weight:600;">Fr</th>
+                      <th style="padding:8px; color:#999; font-weight:500; font-size:11px; font-weight:600;">Sa</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="padding:8px;"></td>
+                      <td style="padding:8px;">1</td>
+                      <td style="padding:8px;">2</td>
+                      <td style="padding:8px;">3</td>
+                      <td style="padding:8px;">4</td>
+                      <td style="padding:8px;">5</td>
+                      <td style="padding:8px;">6</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:8px;">7</td>
+                      <td style="padding:8px;">8</td>
+                      <td style="padding:8px;">9</td>
+                      <td style="padding:8px;">10</td>
+                      <td style="padding:8px;">11</td>
+                      <td style="padding:8px;">12</td>
+                      <td style="padding:8px;">13</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:8px; background:#fce4e4; border-radius:4px; color:#333;">14</td>
+                      <td style="padding:8px; background:#fce4e4; border-radius:4px; color:#333;">15</td>
+                      <td style="padding:8px; background:#fce4e4; border-radius:4px; color:#333;">16</td>
+                      <td style="padding:8px;">17</td>
+                      <td style="padding:8px;">18</td>
+                      <td style="padding:8px;">19</td>
+                      <td style="padding:8px;">20</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:8px; background:#fce4e4; border-radius:4px; color:#333;">21</td>
+                      <td style="padding:8px;">22</td>
+                      <td style="padding:8px; background:#C0272D; border-radius:4px; color:#fff; font-weight:600;">23</td>
+                      <td style="padding:8px;">24</td>
+                      <td style="padding:8px; background:#fce4e4; border-radius:4px; color:#333;">25</td>
+                      <td style="padding:8px;">26</td>
+                      <td style="padding:8px;">27</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:8px;">28</td>
+                      <td style="padding:8px; background:#fce4e4; border-radius:4px; color:#333;">29</td>
+                      <td style="padding:8px;">30</td>
+                      <td style="padding:8px;"></td>
+                      <td style="padding:8px;"></td>
+                      <td style="padding:8px;"></td>
+                      <td style="padding:8px;"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
 
           <!-- Campus Organizations Section -->
           <div style="background:#f5f5f5; padding:30px 20px; margin:0 -20px; border-top:1px solid #e5e7eb;">
@@ -513,101 +626,14 @@
             </div>
           </div>
         </div>
-
-        <!-- Right Sidebar -->
-        <div class="col-12 col-lg-4">
-          <!-- This Week Section -->
-          <div class="card sidebar-card mb-4">
-            <div class="sidebar-card-header d-flex justify-content-between align-items-center">
-              <h6 class="fw-semibold mb-0">This Week</h6>
-              <span class="text-danger" style="font-size:13px; font-weight:600;">3 events</span>
-            </div>
-            <div class="sidebar-card-body">
-              <!-- Event 1 -->
-              <div class="week-event-item">
-                <div class="d-flex gap-2">
-                  <div class="week-event-date">18</div>
-                  <div style="flex-grow:1;">
-                    <p class="week-event-title">Research Summit 2025</p>
-                    <p class="week-event-time">9:00 AM • CCS Auditorium</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Event 2 -->
-              <div class="week-event-item">
-                <div class="d-flex gap-2">
-                  <div class="week-event-date">20</div>
-                  <div style="flex-grow:1;">
-                    <p class="week-event-title">Campus Music Fest</p>
-                    <p class="week-event-time">4:00 PM • Open Court</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Event 3 -->
-              <div class="week-event-item">
-                <div class="d-flex gap-2">
-                  <div class="week-event-date">22</div>
-                  <div style="flex-grow:1;">
-                    <p class="week-event-title">Intramurals Opening</p>
-                    <p class="week-event-time">8:00 AM • Gymnasium</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Latest Announcements Section -->
-          <div class="card sidebar-card">
-            <div class="sidebar-card-header d-flex justify-content-between align-items-center">
-              <h6 class="fw-semibold mb-0">Latest Announcements</h6>
-              <a href="#" style="color:#C0272D; text-decoration:none; font-size:12px;">All</a>
-            </div>
-            <div class="sidebar-card-body">
-              <!-- Announcement 1 -->
-              <div class="announcement-item">
-                <div class="d-flex gap-2">
-                  <i class="bi bi-info-circle announcement-icon" style="color:#FF6B35;"></i>
-                  <div style="flex-grow:1;">
-                    <p class="announcement-title">Enrollment period extended</p>
-                    <p class="announcement-date">Mar 12, 2026</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Announcement 2 -->
-              <div class="announcement-item">
-                <div class="d-flex gap-2">
-                  <i class="bi bi-bookmark announcement-icon" style="color:#9C5FCC;"></i>
-                  <div style="flex-grow:1;">
-                    <p class="announcement-title">Scholarship applications open</p>
-                    <p class="announcement-date">Mar 10, 2026</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Announcement 3 -->
-              <div class="announcement-item">
-                <div class="d-flex gap-2">
-                  <i class="bi bi-check-circle announcement-icon" style="color:#1D9E75;"></i>
-                  <div style="flex-grow:1;">
-                    <p class="announcement-title">No classes on March 25</p>
-                    <p class="announcement-date">Mar 8, 2026</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- ── ORGANIZER PAGE ── -->
-  <div id="organizerPage" style="display:none; background:#f5f5f5; height:100vh; width:100%; position:fixed; top:0; left:0; overflow:hidden;">
+  <div id="organizerPage" style="display:none; background:#f5f5f5; height:100vh; width:100%; position:fixed; top:0; left:0; overflow:hidden; flex-wrap: wrap;">
     <!-- Sidebar -->
-    <div style="width:180px; background:#C0272D; color:#fff; padding:24px 16px; min-height:100vh; position:fixed; left:0; top:0; overflow-y:auto;">
+    <div style="width:180px; background:#C0272D; color:#fff; padding:24px 16px; min-height:100vh; position:fixed; left:0; top:0; overflow-y:auto; z-index: 1000;">
       <!-- Logo -->
       <div style="text-align:center; margin-bottom:40px;">
         <div style="width:40px; height:40px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; margin:0 auto 8px; color:#fff;">C</div>
@@ -851,10 +877,10 @@
   </div>
 
   <!-- ── ADMIN PAGE ── -->
-  <div id="adminPage" style="background:#f0f2f5; height:100vh; width:100%; position:fixed; top:0; left:0; display:none; flex-direction:row; overflow:hidden;">
+  <div id="adminPage" style="background:#f0f2f5; height:100vh; width:100%; position:fixed; top:0; left:0; display:none; flex-direction:row; overflow:hidden; flex-wrap: wrap;">
     
     <!-- Sidebar -->
-    <div style="width:200px; background:#C0272D; color:#fff; padding:20px; min-height:100vh; position:fixed; left:0; top:0; overflow-y:auto;">
+    <div style="width:200px; background:#C0272D; color:#fff; padding:20px; min-height:100vh; position:fixed; left:0; top:0; overflow-y:auto; z-index: 1000;">
       <div style="text-align:center; margin-bottom:25px;">
         <div style="width:45px; height:45px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; margin:0 auto 8px;">C</div>
         <p style="margin:0; font-size:12px; font-weight:600;">CampusConnect</p>
@@ -874,6 +900,9 @@
         </a>
         <a href="#" onclick="showAdminSection('users'); return false;" class="admin-nav-item" id="nav-users">
           <i class="bi bi-people" style="margin-right:8px;"></i>User Management
+        </a>
+        <a href="#" onclick="showAdminSection('departments'); return false;" class="admin-nav-item" id="nav-departments">
+          <i class="bi bi-building" style="margin-right:8px;"></i>Departments
         </a>
         <a href="#" onclick="showAdminSection('settings'); return false;" class="admin-nav-item" id="nav-settings">
           <i class="bi bi-gear" style="margin-right:8px;"></i>Settings
@@ -934,6 +963,12 @@
             <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
               <div style="font-size:28px; color:#1D9E75; font-weight:700;">12</div>
               <p style="margin:8px 0 0 0; color:#666; font-size:13px;">Announcements</p>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+              <div style="font-size:28px; color:#9C5FCC; font-weight:700;">6</div>
+              <p style="margin:8px 0 0 0; color:#666; font-size:13px;">Departments</p>
             </div>
           </div>
         </div>
@@ -1096,23 +1131,120 @@
 
       <!-- Other sections (minimal placeholders) -->
       <div id="events-section" class="section-hidden">
-        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
-          <i class="bi bi-calendar-event" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
-          <p style="margin:0;">Event Management Coming Soon</p>
+        <!-- Events Management -->
+        <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h5 style="margin:0; font-weight:700; color:#1a1a1a;">Manage Events & Organizers</h5>
+            <button onclick="toggleAssignOrganizerModal()" style="background:#C0272D; color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+              <i class="bi bi-plus-lg" style="margin-right:4px;"></i>Assign Organizer
+            </button>
+          </div>
+          
+          <!-- Events Table -->
+          <div style="overflow-x:auto;">
+            <table id="eventsTable" style="width:100%; font-size:13px;">
+              <thead>
+                <tr style="border-bottom:2px solid #e5e7eb; color:#999;">
+                  <th style="padding:12px; text-align:left; font-weight:600;">EVENT NAME</th>
+                  <th style="padding:12px; text-align:left; font-weight:600;">CURRENT ORGANIZER</th>
+                  <th style="padding:12px; text-align:left; font-weight:600;">CATEGORY</th>
+                  <th style="padding:12px; text-align:center; font-weight:600;">ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="eventsTableBody">
+                <!-- Rows will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <div id="announcements-section" class="section-hidden">
-        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
-          <i class="bi bi-megaphone" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
-          <p style="margin:0;">Announcements Management Coming Soon</p>
+        <!-- Announcements Management -->
+        <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h5 style="margin:0; font-weight:700; color:#1a1a1a;">Manage Announcements</h5>
+            <button onclick="toggleAnnouncementModal()" style="background:#C0272D; color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+              <i class="bi bi-plus-lg" style="margin-right:4px;"></i>Post Announcement
+            </button>
+          </div>
+          
+          <!-- Announcements Table -->
+          <div style="overflow-x:auto;">
+            <table id="announcementsTable" style="width:100%; font-size:13px;">
+              <thead>
+                <tr style="border-bottom:2px solid #e5e7eb; color:#999;">
+                  <th style="padding:12px; text-align:left; font-weight:600;">TITLE</th>
+                  <th style="padding:12px; text-align:left; font-weight:600;">CONTENT PREVIEW</th>
+                  <th style="padding:12px; text-align:center; font-weight:600;">DATE</th>
+                  <th style="padding:12px; text-align:center; font-weight:600;">ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="announcementsTableBody">
+                <!-- Rows will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <div id="users-section" class="section-hidden">
-        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
-          <i class="bi bi-people" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
-          <p style="margin:0;">User Management Coming Soon</p>
+        <!-- Users/Accounts Management -->
+        <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h5 style="margin:0; font-weight:700; color:#1a1a1a;">Manage User Accounts</h5>
+            <button onclick="toggleCreateAccountModal()" style="background:#C0272D; color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+              <i class="bi bi-plus-lg" style="margin-right:4px;"></i>Create Account
+            </button>
+          </div>
+          
+          <!-- Accounts Table -->
+          <div style="overflow-x:auto;">
+            <table id="accountsTable" style="width:100%; font-size:13px;">
+              <thead>
+                <tr style="border-bottom:2px solid #e5e7eb; color:#999;">
+                  <th style="padding:12px; text-align:left; font-weight:600;">NAME</th>
+                  <th style="padding:12px; text-align:left; font-weight:600;">EMAIL</th>
+                  <th style="padding:12px; text-align:left; font-weight:600;">DEPARTMENT</th>
+                  <th style="padding:12px; text-align:left; font-weight:600;">ROLE</th>
+                  <th style="padding:12px; text-align:left; font-weight:600;">CREATED</th>
+                </tr>
+              </thead>
+              <tbody id="accountsTableBody">
+                <!-- Rows will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="departments-section" class="section-hidden">
+        <!-- Departments Management -->
+        <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h5 style="margin:0; font-weight:700; color:#1a1a1a;">Manage Departments & Organizations</h5>
+            <button style="background:#C0272D; color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+              <i class="bi bi-plus-lg" style="margin-right:4px;"></i>Add Department
+            </button>
+          </div>
+          
+          <!-- Departments Table -->
+          <div style="overflow-x:auto;">
+            <table id="departmentsTable" style="width:100%; font-size:13px;">
+              <thead>
+                <tr style="border-bottom:2px solid #e5e7eb; color:#999;">
+                  <th style="padding:12px; text-align:left; font-weight:600;">DEPARTMENT NAME</th>
+                  <th style="padding:12px; text-align:left; font-weight:600;">DEPARTMENT HEAD</th>
+                  <th style="padding:12px; text-align:center; font-weight:600;">MEMBERS</th>
+                  <th style="padding:12px; text-align:center; font-weight:600;">STATUS</th>
+                  <th style="padding:12px; text-align:center; font-weight:600;">ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="departmentsTableBody">
+                <!-- Rows will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -1123,6 +1255,115 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+
+
+  <!-- CREATE ACCOUNT MODAL -->
+  <div id="createAccountModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+    <div style="background:#fff; border-radius:12px; padding:30px; max-width:500px; width:90%; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h4 style="margin:0; font-weight:700; color:#1a1a1a;">Create New Account</h4>
+        <button onclick="toggleCreateAccountModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#999;">×</button>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Full Name *</label>
+        <input type="text" id="createName" placeholder="Enter full name" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;"/>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Email Address *</label>
+        <input type="email" id="createEmail" placeholder="Enter email address" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;"/>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Password *</label>
+        <input type="password" id="createPassword" placeholder="Enter password (min 6 characters)" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;"/>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Role *</label>
+        <select id="createRole" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;">
+          <option value="student">Student</option>
+          <option value="officer">Officer</option>
+          <option value="admin">Administrator</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Department *</label>
+        <select id="createDepartment" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;">
+          <option value="">-- Select Department --</option>
+        </select>
+      </div>
+
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button onclick="toggleCreateAccountModal()" style="background:#f0f0f0; color:#1a1a1a; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Cancel</button>
+        <button onclick="confirmCreateAccount()" style="background:#C0272D; color:#fff; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASSIGN ORGANIZER MODAL -->
+  <div id="assignOrganizerModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+    <div style="background:#fff; border-radius:12px; padding:30px; max-width:500px; width:90%; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h4 style="margin:0; font-weight:700; color:#1a1a1a;">Assign Organizer to Event</h4>
+        <button onclick="toggleAssignOrganizerModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#999;">×</button>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600; color:#1a1a1a; font-size:13px;">Select Event</label>
+        <select id="assignEventSelect" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px;">
+          <option value="">-- Choose an event --</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600; color:#1a1a1a; font-size:13px;">Select Organizer</label>
+        <select id="assignOrganizerSelect" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px;">
+          <option value="">-- Choose an organizer --</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600; color:#1a1a1a; font-size:13px;">Notes (Optional)</label>
+        <textarea id="assignNotes" placeholder="Add any notes about this assignment..." style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; min-height:80px; font-family:'Poppins', sans-serif;"></textarea>
+      </div>
+
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button onclick="toggleAssignOrganizerModal()" style="background:#f0f0f0; color:#1a1a1a; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Cancel</button>
+        <button onclick="confirmAssignOrganizer()" style="background:#C0272D; color:#fff; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Assign Organizer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANNOUNCEMENT MODAL -->
+  <div id="announcementModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+    <div style="background:#fff; border-radius:12px; padding:30px; max-width:600px; width:90%; max-height:90vh; overflow-y:auto; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h4 id="announcementModalTitle" style="margin:0; font-weight:700; color:#1a1a1a;">Post New Announcement</h4>
+        <button onclick="toggleAnnouncementModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#999;">×</button>
+      </div>
+
+      <div style="margin-bottom:15px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Title *</label>
+        <input type="text" id="announcementTitle" placeholder="Enter announcement title" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;"/>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Content *</label>
+        <textarea id="announcementContent" placeholder="Enter announcement content" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box; min-height:120px; font-family:'Poppins', sans-serif;"></textarea>
+      </div>
+
+      <input type="hidden" id="announcementId" value=""/>
+
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button onclick="toggleAnnouncementModal()" style="background:#f0f0f0; color:#1a1a1a; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Cancel</button>
+        <button onclick="confirmAnnouncement()" style="background:#C0272D; color:#fff; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Post Announcement</button>
+      </div>
     </div>
   </div>
 
