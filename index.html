@@ -284,7 +284,8 @@
                       date: 'Mar 18, 2026',
                       time: '9:00 AM',
                       location: 'CCS Auditorium',
-                      attendees: '120',
+                      attendees: 120,
+                      capacity: 150,
                       description: 'Join us for an exciting research summit where students and faculty present their latest research projects. Network with peers and learn about innovative academic initiatives on campus.',
                       details: ['Duration: 3 hours', 'Free for all students', 'Refreshments provided', 'Q&A session included']
                     })">View Details</button>
@@ -310,7 +311,8 @@
                       date: 'Mar 20, 2026',
                       time: '4:00 PM',
                       location: 'Open Court',
-                      attendees: '340',
+                      attendees: 340,
+                      capacity: 500,
                       description: 'Experience the vibrant campus music scene! Featuring local and student bands performing their best hits. A great opportunity to unwind and enjoy live music with the campus community.',
                       details: ['Live performances', 'Food and drinks available', 'Free entry', 'Bring your friends']
                     })">View Details</button>
@@ -336,7 +338,8 @@
                       date: 'Mar 22, 2026',
                       time: '8:00 AM',
                       location: 'Main Gymnasium',
-                      attendees: '250',
+                      attendees: 250,
+                      capacity: 300,
                       description: 'Kick off the intramurals season with exciting sports events! Compete in your favorite sports and represent your department. Open to all students regardless of skill level.',
                       details: ['Multiple sports available', 'Team registration', 'Schedule TBA', 'Trophies and prizes']
                     })">View Details</button>
@@ -362,7 +365,8 @@
                       date: 'Mar 25, 2026',
                       time: '10:00 AM',
                       location: 'CCS Lab 3',
-                      attendees: '88',
+                      attendees: 88,
+                      capacity: 100,
                       description: 'Build innovative solutions in 24 hours! Collaborate with fellow students to create projects from scratch. Prizes, mentorship, and networking opportunities await.',
                       details: ['24-hour event', 'Team or individual', 'Free meals provided', 'API access available'],
                       registered: true
@@ -389,7 +393,8 @@
                       date: 'Mar 28, 2026',
                       time: '9:00 AM - 5:00 PM',
                       location: 'Arts Building',
-                      attendees: '175',
+                      attendees: 175,
+                      capacity: 250,
                       description: 'Celebrate diversity through art, music, dance, and cultural performances. Showcase student talents and explore different cultures from around the world.',
                       details: ['Art exhibitions', 'Live performances', 'Cultural food fest', 'Talent showcase']
                     })">View Details</button>
@@ -415,7 +420,8 @@
                       date: 'Apr 2, 2026',
                       time: '10:00 AM - 2:00 PM',
                       location: 'Main Lobby',
-                      attendees: '60',
+                      attendees: 60,
+                      capacity: 100,
                       description: 'Connect with scholarship providers and financial aid representatives. Learn about available funding opportunities and financial assistance programs for your education.',
                       details: ['Multiple scholarship opportunities', 'Financial aid advice', 'One-on-one consultations', 'Application assistance']
                     })">View Details</button>
@@ -622,6 +628,12 @@
                   <p class="org-name">Eco Warriors</p>
                   <p class="org-members">98 members</p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
               </div>
             </div>
           </div>
@@ -846,10 +858,54 @@
       </div>
 
       <!-- Placeholder Sections -->
+      <!-- My Events Section -->
       <div id="org-events-section" class="section-hidden">
-        <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; color:#999;">
-          <i class="bi bi-calendar-event" style="font-size:48px; display:block; margin-bottom:16px; opacity:0.5;"></i>
-          <p style="margin:0;">My Events Management Coming Soon</p>
+        <!-- Header with Filters and Actions -->
+        <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <!-- Search and Filter -->
+            <div style="display:flex; gap:12px; flex:1; min-width:200px;">
+              <div style="flex:1; position:relative; min-width:200px;">
+                <i class="bi bi-search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#aaa; font-size:14px;"></i>
+                <input type="text" id="eventSearchInput" placeholder="Search events..." style="width:100%; padding:10px 12px 10px 36px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px;" onkeyup="filterOrganizerEvents()">
+              </div>
+              <select id="eventStatusFilter" style="padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px;" onchange="filterOrganizerEvents()">
+                <option value="">All Status</option>
+                <option value="approved">Approved</option>
+                <option value="pending">Pending</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <!-- Action Buttons -->
+            <button style="background:#C0272D; color:#fff; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;" onclick="toggleCreateEventModal()">
+              <i class="bi bi-plus-lg"></i>Create Event
+            </button>
+          </div>
+        </div>
+
+        <!-- Events Table -->
+        <div style="background:#fff; padding:24px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.08); overflow-x:auto;">
+          <table style="width:100%; font-size:13px;" id="organizerEventsTable">
+            <thead>
+              <tr style="border-bottom:2px solid #f0f0f0; color:#999; background:#fafafa;">
+                <th style="padding:14px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase;">EVENT NAME</th>
+                <th style="padding:14px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase;">DATE & TIME</th>
+                <th style="padding:14px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase;">LOCATION</th>
+                <th style="padding:14px; text-align:center; font-weight:600; font-size:11px; text-transform:uppercase;">REGISTRATIONS</th>
+                <th style="padding:14px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase;">STATUS</th>
+                <th style="padding:14px; text-align:center; font-weight:600; font-size:11px; text-transform:uppercase;">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="organizerEventsTableBody">
+              <!-- Events will be populated by JavaScript -->
+              <tr>
+                <td colspan="6" style="padding:40px; text-align:center; color:#999;">
+                  <i class="bi bi-inbox" style="font-size:32px; display:block; margin-bottom:12px; opacity:0.5;"></i>
+                  <p style="margin:0;">No events created yet. Click "Create Event" to get started.</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -979,9 +1035,6 @@
             <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h5 style="margin:0; font-weight:700; color:#1a1a1a;">Pending Approvals</h5>
-                <button style="background:#C0272D; color:#fff; border:none; padding:8px 12px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
-                  <i class="bi bi-pencil" style="margin-right:4px;"></i>Manage Events
-                </button>
               </div>
               <div style="overflow-x:auto;">
                 <table style="width:100%; font-size:13px;">
@@ -999,8 +1052,7 @@
                       <td style="padding:12px;">CSS Society</td>
                       <td style="padding:12px;"><span style="background:#E8F4F8; color:#4A90E2; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Academic</span></td>
                       <td style="padding:12px; text-align:center;">
-                        <button style="background:#4CAF50; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; margin-right:6px;">Approve</button>
-                        <button style="background:#f44336; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Reject</button>
+                        <button onclick="goToEventReviewAndOpen(1)" style="background:#2196F3; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Review</button>
                       </td>
                     </tr>
                     <tr style="border-bottom:1px solid #e5e7eb;">
@@ -1008,8 +1060,7 @@
                       <td style="padding:12px;">Music Circle</td>
                       <td style="padding:12px;"><span style="background:#F0E8F8; color:#9C5FCC; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Social</span></td>
                       <td style="padding:12px; text-align:center;">
-                        <button style="background:#4CAF50; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; margin-right:6px;">Approve</button>
-                        <button style="background:#f44336; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Reject</button>
+                        <button onclick="goToEventReviewAndOpen(2)" style="background:#2196F3; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Review</button>
                       </td>
                     </tr>
                     <tr style="border-bottom:1px solid #e5e7eb;">
@@ -1017,8 +1068,7 @@
                       <td style="padding:12px;">CSS Society</td>
                       <td style="padding:12px;"><span style="background:#FFE8E8; color:#8B0000; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Org Event</span></td>
                       <td style="padding:12px; text-align:center;">
-                        <button style="background:#4CAF50; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; margin-right:6px;">Approve</button>
-                        <button style="background:#f44336; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Reject</button>
+                        <button onclick="goToEventReviewAndOpen(3)" style="background:#2196F3; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Review</button>
                       </td>
                     </tr>
                     <tr style="border-bottom:1px solid #e5e7eb;">
@@ -1026,8 +1076,7 @@
                       <td style="padding:12px;">Sports Club</td>
                       <td style="padding:12px;"><span style="background:#FEE8E8; color:#FF6B35; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Sports</span></td>
                       <td style="padding:12px; text-align:center;">
-                        <button style="background:#4CAF50; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; margin-right:6px;">Approve</button>
-                        <button style="background:#f44336; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Reject</button>
+                        <button onclick="goToEventReviewAndOpen(4)" style="background:#2196F3; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Review</button>
                       </td>
                     </tr>
                     <tr>
@@ -1035,12 +1084,14 @@
                       <td style="padding:12px;">Student Gov</td>
                       <td style="padding:12px;"><span style="background:#E8F4F8; color:#4A90E2; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">Academic</span></td>
                       <td style="padding:12px; text-align:center;">
-                        <button style="background:#4CAF50; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer; margin-right:6px;">Approve</button>
-                        <button style="background:#f44336; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Reject</button>
+                        <button onclick="goToEventReviewAndOpen(5)" style="background:#2196F3; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Review</button>
                       </td>
                     </tr>
                   </tbody>
                 </table>
+              </div>
+              <div style="padding-top:16px; border-top:1px solid #e5e7eb; text-align:center;">
+                <a onclick="goToEventReview()" style="color:#2196F3; font-size:13px; font-weight:600; cursor:pointer; text-decoration:none;">View All Pending Events →</a>
               </div>
             </div>
           </div>
@@ -1130,6 +1181,112 @@
       </div>
 
       <!-- Other sections (minimal placeholders) -->
+      <!-- Event Review Section -->
+      <div id="eventreview-section" class="section-hidden">
+        <!-- Back to Pending Events List -->
+        <div id="eventReviewList" style="display:block;">
+          <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+              <h5 style="margin:0; font-weight:700; color:#1a1a1a;">Pending Event Approvals</h5>
+              <span style="background:#FFC107; color:#856404; padding:6px 12px; border-radius:4px; font-size:12px; font-weight:600;" id="pendingEventCount">5</span>
+            </div>
+
+            <!-- Pending Events Table -->
+            <div style="overflow-x:auto;">
+              <table style="width:100%; font-size:13px;">
+                <thead>
+                  <tr style="border-bottom:2px solid #e5e7eb; background:#f5f5f5;">
+                    <th style="padding:12px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase;">EVENT NAME</th>
+                    <th style="padding:12px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase;">ORGANIZER</th>
+                    <th style="padding:12px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase;">DATE</th>
+                    <th style="padding:12px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase;">CATEGORY</th>
+                    <th style="padding:12px; text-align:center; font-weight:600; font-size:11px; text-transform:uppercase;">ACTION</th>
+                  </tr>
+                </thead>
+                <tbody id="pendingEventsTableBody">
+                  <!-- Events will be populated by JavaScript -->
+                  <tr>
+                    <td colspan="5" style="padding:40px; text-align:center; color:#999;">
+                      <i class="bi bi-inbox" style="font-size:32px; display:block; margin-bottom:12px; opacity:0.5;"></i>
+                      <p style="margin:0;">No pending events for review.</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Individual Event Review Page -->
+        <div id="eventReviewDetail" style="display:none;">
+          <!-- Back Button -->
+          <button onclick="backToPendingList()" style="background:#f0f0f0; color:#1a1a1a; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; margin-bottom:20px; display:flex; align-items:center; gap:6px;">
+            <i class="bi bi-arrow-left"></i>Back to Pending Events
+          </button>
+
+          <!-- Event Details Card -->
+          <div style="background:#fff; padding:30px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:20px;">
+            <h3 id="detailEventTitle" style="margin:0 0 20px 0; font-size:24px; font-weight:700; color:#1a1a1a;"></h3>
+            
+            <!-- Event Info Grid -->
+            <div style="background:#f5f5f5; padding:20px; border-radius:8px; margin-bottom:20px;">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+                <div>
+                  <p style="margin:0; font-size:11px; color:#999; text-transform:uppercase; font-weight:600;">Organizer</p>
+                  <p id="detailEventOrganizer" style="margin:8px 0 0 0; font-size:14px; font-weight:600; color:#333;"></p>
+                </div>
+                <div>
+                  <p style="margin:0; font-size:11px; color:#999; text-transform:uppercase; font-weight:600;">Date & Time</p>
+                  <p id="detailEventDateTime" style="margin:8px 0 0 0; font-size:14px; font-weight:600; color:#333;"></p>
+                </div>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                <div>
+                  <p style="margin:0; font-size:11px; color:#999; text-transform:uppercase; font-weight:600;">Location</p>
+                  <p id="detailEventLocation" style="margin:8px 0 0 0; font-size:14px; font-weight:600; color:#333;"></p>
+                </div>
+                <div>
+                  <p style="margin:0; font-size:11px; color:#999; text-transform:uppercase; font-weight:600;">Category</p>
+                  <p id="detailEventCategory" style="margin:8px 0 0 0; font-size:14px; font-weight:600; color:#333;"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div style="margin-bottom:30px;">
+              <h5 style="margin:0 0 12px 0; font-weight:700; color:#1a1a1a; font-size:14px;">Event Description</h5>
+              <p id="detailEventDescription" style="margin:0; padding:15px; background:#f9f9f9; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; line-height:1.8; color:#666;"></p>
+            </div>
+
+            <!-- Rejection Reason Field (shown when rejecting) -->
+            <div style="margin-bottom:30px; display:none;" id="detailRejectionReasonDiv">
+              <h5 style="margin:0 0 12px 0; font-weight:700; color:#1a1a1a; font-size:14px;">Reason for Rejection *</h5>
+              <textarea id="detailRejectionReason" placeholder="Please provide the reason for rejecting this event..." style="width:100%; padding:12px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; min-height:120px; font-family:'Poppins', sans-serif; box-sizing:border-box; resize:vertical;"></textarea>
+              <div class="invalid-feedback" id="detailRejectionReason-error" style="color:#dc3545; font-size:12px; display:none; margin-top:6px;"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="border-top:1px solid #e5e7eb; padding-top:20px; display:flex; gap:12px; justify-content:flex-end;" id="detailActionButtons">
+              <button onclick="backToPendingList()" style="background:#f0f0f0; color:#1a1a1a; border:none; padding:12px 20px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Cancel</button>
+              <button id="detailRejectBtn" onclick="toggleDetailRejection()" style="background:#dc3545; color:#fff; border:none; padding:12px 20px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Reject Event</button>
+              <button id="detailApproveBtn" onclick="approveDetailEvent()" style="background:#4CAF50; color:#fff; border:none; padding:12px 20px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px;">
+                <span class="spinner-border spinner-border-sm" id="detailApproveEvent-spinner" style="display:none; width:14px; height:14px;"></span>
+                <span id="detailApproveEvent-btn-text">Approve Event</span>
+              </button>
+            </div>
+
+            <!-- Submit Rejection Actions -->
+            <div style="border-top:1px solid #e5e7eb; padding-top:20px; display:none; align-items:center; gap:12px; justify-content:flex-end; flex-direction:row;" id="detailSubmitRejectionDiv">
+              <button onclick="cancelDetailRejection()" style="background:#f0f0f0; color:#1a1a1a; border:none; padding:12px 20px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Back to Review</button>
+              <button onclick="submitDetailRejection()" style="background:#dc3545; color:#fff; border:none; padding:12px 20px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px;">
+                <span class="spinner-border spinner-border-sm" id="detailRejectEvent-spinner" style="display:none; width:14px; height:14px;"></span>
+                <span id="detailRejectEvent-btn-text">Submit Rejection</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="events-section" class="section-hidden">
         <!-- Events Management -->
         <div style="background:#fff; padding:20px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:20px;">
@@ -1302,6 +1459,82 @@
       <div style="display:flex; gap:10px; justify-content:flex-end;">
         <button onclick="toggleCreateAccountModal()" style="background:#f0f0f0; color:#1a1a1a; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Cancel</button>
         <button onclick="confirmCreateAccount()" style="background:#C0272D; color:#fff; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE/EDIT EVENT MODAL FOR ORGANIZER -->
+  <div id="createEventModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center; overflow-y:auto; padding:20px 0;">
+    <div style="background:#fff; border-radius:12px; padding:30px; max-width:600px; width:90%; box-shadow:0 10px 40px rgba(0,0,0,0.2); margin:20px auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h4 id="createEventModalTitle" style="margin:0; font-weight:700; color:#1a1a1a;">Create New Event</h4>
+        <button onclick="toggleCreateEventModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#999;">×</button>
+      </div>
+
+      <!-- Event Name -->
+      <div style="margin-bottom:15px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Event Name *</label>
+        <input type="text" id="eventName" placeholder="Enter event name" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;"/>
+        <div class="invalid-feedback" id="eventName-error" style="color:#dc3545; font-size:12px; display:none; margin-top:4px;"></div>
+      </div>
+
+      <!-- Event Description -->
+      <div style="margin-bottom:15px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Description</label>
+        <textarea id="eventDescription" placeholder="Event description and details" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box; min-height:80px; font-family:'Poppins', sans-serif;"></textarea>
+      </div>
+
+      <!-- Date and Time Row -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:15px;">
+        <!-- Date -->
+        <div>
+          <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Date *</label>
+          <input type="date" id="eventDate" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;"/>
+          <div class="invalid-feedback" id="eventDate-error" style="color:#dc3545; font-size:12px; display:none; margin-top:4px;"></div>
+        </div>
+        <!-- Time -->
+        <div>
+          <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Time *</label>
+          <input type="time" id="eventTime" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;"/>
+          <div class="invalid-feedback" id="eventTime-error" style="color:#dc3545; font-size:12px; display:none; margin-top:4px;"></div>
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div style="margin-bottom:15px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Location *</label>
+        <input type="text" id="eventLocation" placeholder="Event venue/location" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;"/>
+        <div class="invalid-feedback" id="eventLocation-error" style="color:#dc3545; font-size:12px; display:none; margin-top:4px;"></div>
+      </div>
+
+      <!-- Category -->
+      <div style="margin-bottom:15px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Category</label>
+        <select id="eventCategory" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;">
+          <option value="">Select category</option>
+          <option value="Academic">Academic</option>
+          <option value="Social">Social</option>
+          <option value="Sports">Sports</option>
+          <option value="Cultural">Cultural</option>
+          <option value="Tech">Tech</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <!-- Capacity -->
+      <div style="margin-bottom:20px;">
+        <label style="display:block; margin-bottom:6px; font-weight:600; color:#1a1a1a; font-size:13px;">Capacity *</label>
+        <input type="number" id="eventCapacity" placeholder="Maximum attendees" min="1" style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box;"/>
+        <div class="invalid-feedback" id="eventCapacity-error" style="color:#dc3545; font-size:12px; display:none; margin-top:4px;"></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button onclick="toggleCreateEventModal()" style="background:#f0f0f0; color:#1a1a1a; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">Cancel</button>
+        <button onclick="saveOrganizerEvent()" style="background:#C0272D; color:#fff; border:none; padding:10px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
+          <span class="spinner-border spinner-border-sm" id="eventModal-spinner" style="display:none; width:14px; height:14px;"></span>
+          <span id="eventModal-btn-text">Create Event</span>
+        </button>
       </div>
     </div>
   </div>

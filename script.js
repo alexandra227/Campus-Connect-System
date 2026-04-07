@@ -183,6 +183,9 @@ function loadOfficerPage(user) {
   
   // Initialize dashboard
   showOrganizerSection('dashboard');
+  
+  // Initialize organizer events
+  initializeOrganizerEvents();
 }
 
 /* ── SHOW ORGANIZER SECTION ── */
@@ -257,7 +260,7 @@ function showAdminSection(section) {
   console.log('showAdminSection called with:', section);
   
   // Hide all sections with inline style
-  const sectionIds = ['dashboard-section', 'events-section', 'announcements-section', 'users-section', 'departments-section', 'settings-section'];
+  const sectionIds = ['dashboard-section', 'eventreview-section', 'events-section', 'announcements-section', 'users-section', 'departments-section', 'settings-section'];
   sectionIds.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
@@ -289,6 +292,7 @@ function showAdminSection(section) {
   // Update title and date
   const titles = {
     'dashboard': 'Dashboard',
+    'eventreview': 'Event Review & Approval',
     'events': 'Event Management',
     'announcements': 'Announcements',
     'users': 'User Management',
@@ -298,6 +302,7 @@ function showAdminSection(section) {
   
   const dates = {
     'dashboard': 'Thursday, March 14, 2026 • Welcome, Administrator',
+    'eventreview': 'Thursday, March 14, 2026 • Review pending event approvals',
     'events': 'Thursday, March 14, 2026 • Manage all campus events',
     'announcements': 'Thursday, March 14, 2026 • Manage announcements',
     'users': 'Thursday, March 14, 2026 • Manage users and permissions',
@@ -312,7 +317,9 @@ function showAdminSection(section) {
   if (dateEl) dateEl.textContent = dates[section] || 'Thursday, March 14, 2026 • Welcome, Administrator';
   
   // Initialize section-specific content
-  if (section === 'events') {
+  if (section === 'eventreview') {
+    displayPendingEvents();
+  } else if (section === 'events') {
     initializeEventsTable();
   } else if (section === 'departments') {
     initializeDepartmentsTable();
@@ -766,7 +773,13 @@ function viewEventDetails(eventData) {
   document.getElementById('modalEventDate').textContent = eventData.date;
   document.getElementById('modalEventTime').textContent = eventData.time;
   document.getElementById('modalEventLocation').textContent = eventData.location;
-  document.getElementById('modalEventAttendees').textContent = eventData.attendees + ' people';
+  
+  // Display attendee count with capacity info
+  const attendeeCount = eventData.attendees || 0;
+  const capacity = eventData.capacity || 100;
+  const remainingSpots = capacity - attendeeCount;
+  document.getElementById('modalEventAttendees').textContent = `${attendeeCount} of ${capacity} attending`;
+  
   document.getElementById('modalEventDescription').textContent = eventData.description;
   
   // Update category badge
@@ -795,12 +808,22 @@ function viewEventDetails(eventData) {
     });
   }
   
-  // Update button state
+  // Update button state based on registration status and capacity
   const registerBtn = document.getElementById('modalRegisterBtn');
+  const isFull = attendeeCount >= capacity;
+  
   if (eventData.registered) {
     registerBtn.textContent = '✓ Already Registered';
     registerBtn.disabled = true;
     registerBtn.className = 'btn btn-lg btn-success w-100';
+  } else if (isFull) {
+    registerBtn.textContent = '✗ Event Full - No Spots Available';
+    registerBtn.disabled = true;
+    registerBtn.className = 'btn btn-lg btn-secondary w-100';
+  } else if (remainingSpots <= 5) {
+    registerBtn.textContent = `Register Now (${remainingSpots} spot${remainingSpots !== 1 ? 's' : ''} left)`;
+    registerBtn.disabled = false;
+    registerBtn.className = 'btn btn-lg btn-warning w-100';
   } else {
     registerBtn.textContent = 'Register Now';
     registerBtn.disabled = false;
@@ -821,12 +844,30 @@ function closeEventDetails() {
 function registerForEvent() {
   if (!currentEvent) return;
   
+  // Check if event is at capacity
+  const attendeeCount = currentEvent.attendees || 0;
+  const capacity = currentEvent.capacity || 100;
+  
+  if (attendeeCount >= capacity) {
+    showToast('Sorry, this event has reached its maximum capacity!');
+    return;
+  }
+  
+  // Check if already registered
+  if (currentEvent.registered) {
+    showToast('You are already registered for this event!');
+    return;
+  }
+  
   const registerBtn = document.getElementById('modalRegisterBtn');
   registerBtn.disabled = true;
   registerBtn.textContent = 'Registering...';
   
   // Simulate registration
   setTimeout(() => {
+    // Increment attendee count
+    currentEvent.attendees = (currentEvent.attendees || 0) + 1;
+    
     registerBtn.textContent = '✓ Successfully Registered!';
     registerBtn.className = 'btn btn-lg btn-success w-100';
     currentEvent.registered = true;
@@ -907,6 +948,466 @@ function filterEventsByDepartment(department) {
     // Show events only for the student's department
     eventItem.style.display = eventDept === department ? 'block' : 'none';
   });
+}
+
+// ── ORGANIZER EVENTS DATA ──
+let organizerEvents = [
+  { id: 1, name: 'Hackathon 2026', date: '2026-03-25', time: '09:00', location: 'Tech Lab', category: 'Tech', capacity: 100, registrations: 88, status: 'approved', description: 'Annual hackathon event for developers' },
+  { id: 2, name: 'CSS Seminar', date: '2026-03-30', time: '14:00', location: 'Auditorium', category: 'Academic', capacity: 60, registrations: 39, status: 'approved', description: 'Professional development seminar' },
+  { id: 3, name: 'Research Summit', date: '2026-04-05', time: '10:00', location: 'Conference Room', category: 'Academic', capacity: 120, registrations: 0, status: 'pending', description: 'Latest research presentations and discussions' },
+  { id: 4, name: 'CSS Sports Fest', date: '2026-04-12', time: '15:00', location: 'Sports Complex', category: 'Sports', capacity: 80, registrations: 0, status: 'pending', description: 'Annual sports festival' },
+];
+
+let currentEventEdit = null;
+
+/* ── TOGGLE CREATE EVENT MODAL ── */
+function toggleCreateEventModal() {
+  const modal = document.getElementById('createEventModal');
+  if (modal.style.display === 'none' || !modal.style.display) {
+    modal.style.display = 'flex';
+    currentEventEdit = null;
+    resetEventForm();
+    document.getElementById('createEventModalTitle').textContent = 'Create New Event';
+    document.getElementById('eventModal-btn-text').textContent = 'Create Event';
+  } else {
+    modal.style.display = 'none';
+  }
+}
+
+/* ── RESET EVENT FORM ── */
+function resetEventForm() {
+  document.getElementById('eventName').value = '';
+  document.getElementById('eventDescription').value = '';
+  document.getElementById('eventDate').value = '';
+  document.getElementById('eventTime').value = '';
+  document.getElementById('eventLocation').value = '';
+  document.getElementById('eventCategory').value = '';
+  document.getElementById('eventCapacity').value = '';
+  // Hide error messages
+  document.getElementById('eventName-error').style.display = 'none';
+  document.getElementById('eventDate-error').style.display = 'none';
+  document.getElementById('eventTime-error').style.display = 'none';
+  document.getElementById('eventLocation-error').style.display = 'none';
+  document.getElementById('eventCapacity-error').style.display = 'none';
+}
+
+/* ── VALIDATE EVENT FORM ── */
+function validateEventForm() {
+  let isValid = true;
+  const errors = ['eventName-error', 'eventDate-error', 'eventTime-error', 'eventLocation-error', 'eventCapacity-error'];
+  errors.forEach(id => document.getElementById(id).style.display = 'none');
+
+  const eventName = document.getElementById('eventName').value.trim();
+  if (!eventName) {
+    document.getElementById('eventName-error').textContent = 'Event name is required';
+    document.getElementById('eventName-error').style.display = 'block';
+    isValid = false;
+  }
+
+  const eventDate = document.getElementById('eventDate').value;
+  if (!eventDate) {
+    document.getElementById('eventDate-error').textContent = 'Event date is required';
+    document.getElementById('eventDate-error').style.display = 'block';
+    isValid = false;
+  }
+
+  const eventTime = document.getElementById('eventTime').value;
+  if (!eventTime) {
+    document.getElementById('eventTime-error').textContent = 'Event time is required';
+    document.getElementById('eventTime-error').style.display = 'block';
+    isValid = false;
+  }
+
+  const eventLocation = document.getElementById('eventLocation').value.trim();
+  if (!eventLocation) {
+    document.getElementById('eventLocation-error').textContent = 'Location is required';
+    document.getElementById('eventLocation-error').style.display = 'block';
+    isValid = false;
+  }
+
+  const eventCapacity = document.getElementById('eventCapacity').value;
+  if (!eventCapacity || eventCapacity < 1) {
+    document.getElementById('eventCapacity-error').textContent = 'Please enter a valid capacity';
+    document.getElementById('eventCapacity-error').style.display = 'block';
+    isValid = false;
+  }
+
+  return isValid;
+}
+
+/* ── SAVE ORGANIZER EVENT ── */
+function saveOrganizerEvent() {
+  if (!validateEventForm()) return;
+
+  const spinner = document.getElementById('eventModal-spinner');
+  const btnText = document.getElementById('eventModal-btn-text');
+  spinner.style.display = 'block';
+  btnText.textContent = currentEventEdit ? 'Updating...' : 'Creating...';
+
+  const eventData = {
+    name: document.getElementById('eventName').value.trim(),
+    description: document.getElementById('eventDescription').value.trim(),
+    date: document.getElementById('eventDate').value,
+    time: document.getElementById('eventTime').value,
+    location: document.getElementById('eventLocation').value.trim(),
+    category: document.getElementById('eventCategory').value,
+    capacity: parseInt(document.getElementById('eventCapacity').value)
+  };
+
+  // Simulate API call
+  setTimeout(() => {
+    if (currentEventEdit) {
+      // Update existing event
+      const index = organizerEvents.findIndex(e => e.id === currentEventEdit.id);
+      if (index > -1) {
+        organizerEvents[index] = {
+          ...organizerEvents[index],
+          ...eventData,
+          status: 'pending'
+        };
+      }
+      showToast('Event updated successfully!');
+    } else {
+      // Create new event
+      const newEvent = {
+        id: Math.max(...organizerEvents.map(e => e.id), 0) + 1,
+        ...eventData,
+        registrations: 0,
+        status: 'pending'
+      };
+      organizerEvents.push(newEvent);
+      showToast('Event created successfully!');
+    }
+
+    spinner.style.display = 'none';
+    btnText.textContent = currentEventEdit ? 'Update Event' : 'Create Event';
+    toggleCreateEventModal();
+    displayOrganizerEvents();
+  }, 800);
+}
+
+/* ── EDIT ORGANIZER EVENT ── */
+function editOrganizerEvent(eventId) {
+  const event = organizerEvents.find(e => e.id === eventId);
+  if (!event) return;
+
+  // Prevent editing if event is approved or pending
+  if (event.status === 'approved') {
+    showToast('Cannot edit approved events. Contact admin if changes are needed.');
+    return;
+  }
+  if (event.status === 'pending') {
+    showToast('Cannot edit events that are submitted for review.');
+    return;
+  }
+
+  currentEventEdit = event;
+  document.getElementById('eventName').value = event.name;
+  document.getElementById('eventDescription').value = event.description;
+  document.getElementById('eventDate').value = event.date;
+  document.getElementById('eventTime').value = event.time;
+  document.getElementById('eventLocation').value = event.location;
+  document.getElementById('eventCategory').value = event.category;
+  document.getElementById('eventCapacity').value = event.capacity;
+
+  document.getElementById('createEventModalTitle').textContent = 'Edit Event';
+  document.getElementById('eventModal-btn-text').textContent = 'Update Event';
+  
+  const modal = document.getElementById('createEventModal');
+  modal.style.display = 'flex';
+}
+
+/* ── DELETE ORGANIZER EVENT ── */
+function deleteOrganizerEvent(eventId) {
+  const event = organizerEvents.find(e => e.id === eventId);
+  if (!event) return;
+
+  // Prevent deletion if event is approved or pending
+  if (event.status === 'approved') {
+    showToast('Cannot delete approved events. Contact admin if deletion is needed.');
+    return;
+  }
+  if (event.status === 'pending') {
+    showToast('Cannot delete events that are submitted for review.');
+    return;
+  }
+
+  if (confirm('Are you sure you want to delete this event?')) {
+    organizerEvents = organizerEvents.filter(e => e.id !== eventId);
+    showToast('Event deleted successfully!');
+    displayOrganizerEvents();
+  }
+}
+
+/* ── DISPLAY ORGANIZER EVENTS ── */
+function displayOrganizerEvents() {
+  const tbody = document.getElementById('organizerEventsTableBody');
+  
+  if (organizerEvents.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="padding:40px; text-align:center; color:#999;">
+          <i class="bi bi-inbox" style="font-size:32px; display:block; margin-bottom:12px; opacity:0.5;"></i>
+          <p style="margin:0;">No events created yet. Click "Create Event" to get started.</p>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = organizerEvents.map(event => {
+    const statusColor = event.status === 'approved' ? { bg: '#D4EDDA', color: '#155724' } : { bg: '#FFF3CD', color: '#856404' };
+    const registrationPercent = (event.registrations / event.capacity * 100);
+    const progressColor = event.registrations >= event.capacity * 0.8 ? '#FF6B35' : event.registrations >= event.capacity * 0.5 ? '#FFC107' : '#C0272D';
+    
+    return `
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:14px 12px; color:#333; font-weight:600;">${event.name}</td>
+        <td style="padding:14px 12px; color:#666; font-size:12px;">
+          ${new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} <br> ${event.time}
+        </td>
+        <td style="padding:14px 12px; color:#666; font-size:12px;">${event.location}</td>
+        <td style="padding:14px 12px; text-align:center;">
+          <div style="width:100%; background:#f0f0f0; border-radius:4px; height:6px; position:relative; overflow:hidden; margin-bottom:4px;">
+            <div style="background:${progressColor}; height:100%; width:${Math.min(registrationPercent, 100)}%;"></div>
+          </div>
+          <span style="font-size:11px; color:#999;">${event.registrations} / ${event.capacity}</span>
+        </td>
+        <td style="padding:14px 12px;">
+          <span style="background:${statusColor.bg}; color:${statusColor.color}; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600; text-transform:capitalize;">
+            ${event.status}
+          </span>
+        </td>
+        <td style="padding:14px 12px; text-align:center;">
+          <button onclick="editOrganizerEvent(${event.id})" style="background:none; border:none; color:${event.status === 'approved' || event.status === 'pending' ? '#ccc' : '#C0272D'}; cursor:${event.status === 'approved' || event.status === 'pending' ? 'not-allowed' : 'pointer'}; font-size:14px; padding:4px 8px; margin:0 2px; opacity:${event.status === 'approved' || event.status === 'pending' ? '0.5' : '1'};" title="${event.status === 'approved' || event.status === 'pending' ? 'Cannot edit ' + event.status + ' events' : 'Edit'}" ${event.status === 'approved' || event.status === 'pending' ? 'disabled' : ''}>
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button onclick="deleteOrganizerEvent(${event.id})" style="background:none; border:none; color:${event.status === 'approved' || event.status === 'pending' ? '#ccc' : '#dc3545'}; cursor:${event.status === 'approved' || event.status === 'pending' ? 'not-allowed' : 'pointer'}; font-size:14px; padding:4px 8px; margin:0 2px; opacity:${event.status === 'approved' || event.status === 'pending' ? '0.5' : '1'};" title="${event.status === 'approved' || event.status === 'pending' ? 'Cannot delete ' + event.status + ' events' : 'Delete'}" ${event.status === 'approved' || event.status === 'pending' ? 'disabled' : ''}>
+            <i class="bi bi-trash"></i>
+          </button>
+          <button onclick="viewOrganizerEventDetails(${event.id})" style="background:none; border:none; color:#666; cursor:pointer; font-size:14px; padding:4px 8px; margin:0 2px;" title="View">
+            <i class="bi bi-eye"></i>
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+/* ── FILTER ORGANIZER EVENTS ── */
+function filterOrganizerEvents() {
+  const searchTerm = document.getElementById('eventSearchInput').value.toLowerCase();
+  const statusFilter = document.getElementById('eventStatusFilter').value;
+
+  const tbody = document.getElementById('organizerEventsTableBody');
+  const rows = tbody.querySelectorAll('tr');
+
+  rows.forEach(row => {
+    const eventName = row.cells[0]?.textContent.toLowerCase() || '';
+    const status = row.cells[4]?.textContent.toLowerCase().trim() || '';
+
+    const matchSearch = eventName.includes(searchTerm);
+    const matchStatus = !statusFilter || status.includes(statusFilter.toLowerCase());
+
+    row.style.display = matchSearch && matchStatus ? '' : 'none';
+  });
+}
+
+/* ── VIEW ORGANIZER EVENT DETAILS ── */
+function viewOrganizerEventDetails(eventId) {
+  const event = organizerEvents.find(e => e.id === eventId);
+  if (!event) return;
+
+  alert(
+    `Event: ${event.name}\n\n` +
+    `Date: ${event.date}\n` +
+    `Time: ${event.time}\n` +
+    `Location: ${event.location}\n` +
+    `Category: ${event.category}\n` +
+    `Capacity: ${event.capacity}\n` +
+    `Registrations: ${event.registrations}\n` +
+    `Status: ${event.status}\n\n` +
+    `Description:\n${event.description}`
+  );
+}
+
+/* ── LOAD ORGANIZER EVENTS ON PAGE LOAD ── */
+function initializeOrganizerEvents() {
+  displayOrganizerEvents();
+}
+
+// ── PENDING EVENTS FOR ADMIN REVIEW ──
+let pendingEvents = [
+  { id: 1, name: 'Art & Culture Week', organizer: 'Arts Club', date: 'Mar 28, 2026', location: 'Arts Building', category: 'Social', description: 'Celebrate diversity through art, music, dance, and cultural performances. Showcase student talents and explore different cultures from around the world.' },
+  { id: 2, name: 'Photography Workshop', organizer: 'Photo Club', date: 'Apr 5, 2026', location: 'Media Lab', category: 'Academic', description: 'Learn professional photography techniques and tips from experienced photographers. Bring your cameras and get hands-on experience.' },
+  { id: 3, name: 'Career Fair 2026', organizer: 'Career Services', date: 'Apr 10, 2026', location: 'Main Hall', category: 'Academic', description: 'Meet recruiters from leading companies. Explore career opportunities and network with industry professionals.' },
+  { id: 4, name: 'Wellness Day', organizer: 'Health Club', date: 'Apr 15, 2026', location: 'Sports Complex', category: 'Social', description: 'Join us for a day of wellness activities including yoga, meditation, health talks, and fitness demonstrations.' },
+  { id: 5, name: 'Tech Talk Series', organizer: 'Tech Club', date: 'Apr 20, 2026', location: 'Lecture Hall', category: 'Academic', description: 'Industry experts sharing insights on the latest technology trends and innovations in software development.' },
+];
+
+let currentReviewEvent = null;
+let isRejectingEvent = false;
+
+/* ── GO TO EVENT REVIEW PAGE ── */
+function goToEventReview() {
+  showAdminSection('eventreview');
+  displayPendingEvents();
+}
+
+/* ── GO TO EVENT REVIEW AND OPEN SPECIFIC EVENT ── */
+function goToEventReviewAndOpen(eventId) {
+  showAdminSection('eventreview');
+  displayPendingEvents();
+  setTimeout(() => openEventReviewDetail(eventId), 100);
+}
+
+/* ── DISPLAY PENDING EVENTS ── */
+function displayPendingEvents() {
+  const tbody = document.getElementById('pendingEventsTableBody');
+  const countDiv = document.getElementById('pendingEventCount');
+  
+  countDiv.textContent = pendingEvents.length;
+  
+  if (pendingEvents.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="padding:40px; text-align:center; color:#999;">
+          <i class="bi bi-inbox" style="font-size:32px; display:block; margin-bottom:12px; opacity:0.5;"></i>
+          <p style="margin:0;">No pending events for review.</p>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = pendingEvents.map(event => `
+    <tr style="border-bottom:1px solid #e5e7eb;">
+      <td style="padding:14px 12px; color:#333; font-weight:600;">${event.name}</td>
+      <td style="padding:14px 12px; color:#666;">${event.organizer}</td>
+      <td style="padding:14px 12px; color:#666;">${event.date}</td>
+      <td style="padding:14px 12px;"><span style="background:#E8F4F8; color:#4A90E2; padding:4px 10px; border-radius:4px; font-size:11px; font-weight:600;">${event.category}</span></td>
+      <td style="padding:14px 12px; text-align:center;">
+        <button onclick="openEventReviewDetail(${event.id})" style="background:#2196F3; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:600; cursor:pointer;">Review</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+/* ── OPEN EVENT REVIEW DETAIL PAGE ── */
+function openEventReviewDetail(eventId) {
+  const event = pendingEvents.find(e => e.id === eventId);
+  if (!event) return;
+
+  currentReviewEvent = event;
+  isRejectingEvent = false;
+
+  // Populate detail page
+  document.getElementById('detailEventTitle').textContent = event.name;
+  document.getElementById('detailEventOrganizer').textContent = event.organizer;
+  document.getElementById('detailEventDateTime').textContent = event.date;
+  document.getElementById('detailEventLocation').textContent = event.location;
+  document.getElementById('detailEventCategory').textContent = event.category;
+  document.getElementById('detailEventDescription').textContent = event.description;
+
+  // Reset form
+  document.getElementById('detailRejectionReason').value = '';
+  document.getElementById('detailRejectionReasonDiv').style.display = 'none';
+  document.getElementById('detailSubmitRejectionDiv').style.display = 'none';
+  document.getElementById('detailActionButtons').style.display = 'flex';
+  document.getElementById('detailRejectionReason-error').style.display = 'none';
+
+  // Switch to detail view
+  document.getElementById('eventReviewList').style.display = 'none';
+  document.getElementById('eventReviewDetail').style.display = 'block';
+}
+
+/* ── BACK TO PENDING LIST ── */
+function backToPendingList() {
+  document.getElementById('eventReviewList').style.display = 'block';
+  document.getElementById('eventReviewDetail').style.display = 'none';
+  currentReviewEvent = null;
+  isRejectingEvent = false;
+  cancelDetailRejection();
+}
+
+/* ── TOGGLE DETAIL REJECTION ── */
+function toggleDetailRejection() {
+  document.getElementById('detailRejectionReasonDiv').style.display = 'block';
+  document.getElementById('detailActionButtons').style.display = 'none';
+  const div = document.getElementById('detailSubmitRejectionDiv');
+  div.style.display = 'flex';
+  isRejectingEvent = true;
+}
+
+/* ── CANCEL DETAIL REJECTION ── */
+function cancelDetailRejection() {
+  document.getElementById('detailRejectionReasonDiv').style.display = 'none';
+  document.getElementById('detailSubmitRejectionDiv').style.display = 'none';
+  document.getElementById('detailActionButtons').style.display = 'flex';
+  document.getElementById('detailRejectionReason').value = '';
+  document.getElementById('detailRejectionReason-error').style.display = 'none';
+  isRejectingEvent = false;
+}
+
+/* ── SUBMIT DETAIL REJECTION ── */
+function submitDetailRejection() {
+  const reason = document.getElementById('detailRejectionReason').value.trim();
+  const errorDiv = document.getElementById('detailRejectionReason-error');
+
+  if (!reason) {
+    errorDiv.textContent = 'Please provide a reason for rejection';
+    errorDiv.style.display = 'block';
+    return;
+  }
+
+  const spinner = document.getElementById('detailRejectEvent-spinner');
+  const btnText = document.getElementById('detailRejectEvent-btn-text');
+  
+  const btn = document.querySelector('#detailSubmitRejectionDiv button:last-child');
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  btnText.textContent = 'Submitting...';
+
+  // Simulate processing
+  setTimeout(() => {
+    if (currentReviewEvent) {
+      // Remove from pending events
+      pendingEvents = pendingEvents.filter(e => e.id !== currentReviewEvent.id);
+      showToast(`${currentReviewEvent.name} has been rejected. Email sent to organizer.`);
+      displayPendingEvents();
+    }
+
+    spinner.style.display = 'none';
+    btnText.textContent = 'Submit Rejection';
+    btn.disabled = false;
+    backToPendingList();
+  }, 800);
+}
+
+/* ── APPROVE DETAIL EVENT ── */
+function approveDetailEvent() {
+  const spinner = document.getElementById('detailApproveEvent-spinner');
+  const btnText = document.getElementById('detailApproveEvent-btn-text');
+  const btn = document.getElementById('detailApproveBtn');
+  
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  btnText.textContent = 'Approving...';
+
+  // Simulate processing
+  setTimeout(() => {
+    if (currentReviewEvent) {
+      // Remove from pending events
+      pendingEvents = pendingEvents.filter(e => e.id !== currentReviewEvent.id);
+      showToast(`${currentReviewEvent.name} has been approved!`);
+      displayPendingEvents();
+    }
+
+    spinner.style.display = 'none';
+    btnText.textContent = 'Approve Event';
+    btn.disabled = false;
+    backToPendingList();
+  }, 800);
 }
 
 /* ── ENTER KEY ── */
